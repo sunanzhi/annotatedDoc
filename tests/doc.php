@@ -6,7 +6,7 @@ use MorsTiin\AnnotatedDoc\Template;
 
 $config = Config::getInstance();
 $config->moduleList = [
-    ['path' => __DIR__.'/example', 'namespace' => 'MorsTiin\\AnnotatedDoc\\example', 'name' => 'example'],
+    ['path' => __DIR__.'/example', 'namespace' => 'MorsTiin\\AnnotatedDoc\\Tests\\example', 'name' => 'example'],
 ];
 
 echo (new Template())->show();

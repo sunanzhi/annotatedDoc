@@ -1,5 +1,5 @@
 <?php
-namespace MorsTiin\AnnotatedDoc\example;
+namespace MorsTiin\AnnotatedDoc\Tests\example;
 
 class APITest
 {
