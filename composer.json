@@ -1,7 +1,7 @@
 {
     "name": "sunanzhi/annotateddoc",
     "description": "php注释生成文档",
-    "license": "Apache 2.0",
+    "license": "Apache-2.0",
     "minimum-stability": "dev",
     "authors": [
         {
