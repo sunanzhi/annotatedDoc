@@ -1,0 +1,21 @@
+{
+    "name": "sunanzhi/annotateddoc",
+    "description": "php注释生成文档",
+    "license": "Apache 2.0",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "sunanzhi",
+            "email": "sunanzhi@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MorsTiin\\Core\\": "src", 
+            "MorsTiin\\Static\\":"static"
+        }
+    }
+}
