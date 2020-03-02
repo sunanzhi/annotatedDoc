@@ -1,5 +1,5 @@
 <?php
-namespace MorsTiin\Core;
+namespace MorsTiin\AnnotatedDoc;
 
 /**
  * 多模块应用

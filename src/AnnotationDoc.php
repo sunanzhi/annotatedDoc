@@ -1,5 +1,5 @@
 <?php
-namespace MorsTiin\Core;
+namespace MorsTiin\AnnotatedDoc;
 
 use ReflectionMethod;
 
