@@ -56,8 +56,7 @@ class Module
                         }
                         if ($method->name == $config->defaultMethod) {
                             $requestUrl = '/' . strtolower($module['name']) . '/' . $config->defaultClass . '/' . $config->defaultMethod;
-                            $methodDoc = explode("\n", $class->getMethod($method->name)->getDocComment());
-                            $currentDoc = AnnotationDoc::handleComment($methodDoc, $method);
+                            $currentDoc = AnnotationDoc::handleComment($method);
                         }
                         // 处理文档
                         $docList[] = [

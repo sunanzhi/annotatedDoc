@@ -11,14 +11,15 @@ class AnnotationDoc
     /**
      * 处理文档内容
      *
-     * @param array $doc
      * @param ReflectionMethod $method
      * @return array
      */
-    public static function handleComment(array $doc, ReflectionMethod $method): array
+    public static function handleComment(ReflectionMethod $method): array
     {
+        $doc = explode("\n", $method->getDocComment());
         $methodPparams = $method->getParameters();
         $paramsWithMethod = [];
+        // 方法参数
         foreach ($methodPparams as $param) {
             $paramName = $param->getName();
             $paramsWithMethod[$paramName] = [
@@ -34,6 +35,7 @@ class AnnotationDoc
         $table = [];
         $desc = [];
         for ($i = 0;; $i++) {
+            // 删除首尾空格
             $value = trim($doc[$i]);
             if ($value == '') {
                 break;
@@ -42,9 +44,11 @@ class AnnotationDoc
             if (in_array($value, ['/**', '*'])) {
                 continue;
             }
+            // 注释结束判断
             if ($value == '*/') {
                 break;
             }
+            // 删除首位*字符
             $value = trim(substr($value, 1));
             // 获取tag
             $tagStartPosition = strpos($value, '@');
