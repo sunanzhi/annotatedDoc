@@ -3,6 +3,12 @@ php 注释自动生成文档
 
 ----
 
+### 效果链接
+
+> http://tp6.sunanzhi.com/doc/index.php?module=makeup&class=Product&method=list
+
+----
+
 ### 安装方式
 
 > composer require sunanzhi/annotateddoc
