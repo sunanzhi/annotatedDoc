@@ -46,7 +46,7 @@ class Module
                         continue;
                     }
                     // 当前文档说明
-                    $classDoc = explode("\n", $class->getDocComment());
+                    $classDoc = AnnotationDoc::handleClassComment($class);
                     // 获取全部公开方法文档
                     $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
                     $docList = [];
@@ -56,7 +56,7 @@ class Module
                         }
                         if ($method->name == $config->defaultMethod) {
                             $requestUrl = '/' . strtolower($module['name']) . '/' . $config->defaultClass . '/' . $config->defaultMethod;
-                            $currentDoc = AnnotationDoc::handleComment($method);
+                            $methodDoc = AnnotationDoc::handleMethodComment($method);
                         }
                         // 处理文档
                         $docList[] = [
@@ -73,13 +73,15 @@ class Module
 
         }
         return [
-            'resClassList' => $resClassList,
-            'requestUrl' => $requestUrl,
-            'resModule' => $resModule,
-            'currentDoc' => $currentDoc,
+            'title' => $config->title,
             'defaultModule' => $config->defaultModule,
             'defaultClass' => $config->defaultClass,
             'defaultMethod' => $config->defaultMethod,
+            'resClassList' => $resClassList,
+            'requestUrl' => $requestUrl,
+            'resModule' => $resModule,
+            'classDoc' => $classDoc,
+            'methodDoc' => $methodDoc,
             'staticUrl' => $config->staticUrl,
         ];
     }

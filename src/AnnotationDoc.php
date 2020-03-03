@@ -1,6 +1,7 @@
 <?php
 namespace MorsTiin\AnnotatedDoc;
 
+use ReflectionClass;
 use ReflectionMethod;
 
 /**
@@ -9,12 +10,49 @@ use ReflectionMethod;
 class AnnotationDoc
 {
     /**
-     * 处理文档内容
+     * 处理类文档内容
+     * 
+     * @param ReflectionClass $class 类
+     * @return string
+     */
+    public static function handleClassComment(ReflectionClass $class): string
+    {
+        $doc = explode("\n", $class->getDocComment());
+        $classDoc = [];
+        for($i = 0;; $i++){
+            // 删除首尾空格
+            $value = trim($doc[$i]);
+            if ($value == '') {
+                break;
+            }
+            // 无用注解
+            if (in_array($value, ['/**', '*'])) {
+                continue;
+            }
+            // 注释结束判断
+            if ($value == '*/') {
+                break;
+            }
+            // 空内容过滤
+            if ($value == ''){
+                continue;
+            }
+            // 删除首位*字符
+            $value = trim(substr($value, 1));
+            $classDoc[] = $value;
+        }
+
+        return implode('\n', $classDoc);
+    }
+
+
+    /**
+     * 处理方法文档内容
      *
-     * @param ReflectionMethod $method
+     * @param ReflectionMethod $method 方法
      * @return array
      */
-    public static function handleComment(ReflectionMethod $method): array
+    public static function handleMethodComment(ReflectionMethod $method): array
     {
         $doc = explode("\n", $method->getDocComment());
         $methodPparams = $method->getParameters();

@@ -1,90 +1,120 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>MorsTiin API 文档</title>
-  <link rel="stylesheet" href="{{staticUrl.layuiCSSPath}}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="{{staticUrl.layuiCSSPath}}">
 </head>
 <style>
-    pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
-    .string { color: green; }
-    .number { color: darkorange; }
-    .boolean { color: blue; }
-    .null { color: magenta; }
-    .key { color: red; }
+    pre {
+        outline: 1px solid #ccc;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .string {
+        color: green;
+    }
+
+    .number {
+        color: darkorange;
+    }
+
+    .boolean {
+        color: blue;
+    }
+
+    .null {
+        color: magenta;
+    }
+
+    .key {
+        color: red;
+    }
 </style>
+
 <body class="layui-layout-body">
-<div class="layui-layout layui-layout-admin">
-  <div class="layui-header">
-    <a href="/doc/index.php"><div class="layui-logo">MorsTiin API 文档</div></a>
-    <!-- 头部区域（可配合layui已有的水平导航） -->
-    <ul class="layui-nav layui-layout-left">
-      <li class="layui-nav-item">
-        <a href="javascript:;">{{defaultModule}}</a>
-        <dl class="layui-nav-child">
-            {% for module in resModule %}
-                {% if module == defaultModule %}
-                <dd class="layui-this"><a href="/doc/index.php?module={{module}}".'">{{module}}</a></dd>
-                {% else %}
-                <dd><a href="/doc/index.php?module={{module}}">{{module}}</a></dd>
-                {% endif%}
-            {% endfor %}
-        </dl>
-      </li>
-    </ul>
-  </div>
-  <div class="layui-side layui-bg-black">
-    <div class="layui-side-scroll">
-      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-        {% for class in resClassList %}
-            <li class="layui-nav-item layui-nav-itemed">
-                <a class="" href="javascript:;">{{class['className']}}</a>
-                <dl class="layui-nav-child">
-                    {% for doc in class.docList %}
-                        {% if class.module == defaultModule and class.className == defaultClass and doc.method == defaultMethod %}
-                            <dd class='layui-this'><a href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a></dd>
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <a href="/doc/index.php">
+                <div class="layui-logo">{{title}}</div>
+            </a>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">{{defaultModule}}</a>
+                    <dl class="layui-nav-child">
+                        {% for module in resModule %}
+                        {% if module == defaultModule %}
+                        <dd class="layui-this"><a href="/doc/index.php?module={{module}}" .'">{{module}}</a></dd>
                         {% else %}
-                            <dd><a href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a></dd>
-                        {% endif %}
+                        <dd><a href="/doc/index.php?module={{module}}">{{module}}</a></dd>
+                        {% endif%}
+                        {% endfor %}
+                    </dl>
+                </li>
+            </ul>
+        </div>
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    {% for class in resClassList %}
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;" onclick="showClassDesc('{{classDoc}}', this);">
+                            {{class.className}}
+                        </a>
+                        <dl class="layui-nav-child">
+                            {% for doc in class.docList %}
+                            {% if class.module == defaultModule and class.className == defaultClass and doc.method == defaultMethod %}
+                            <dd class='layui-this'><a
+                                    href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a>
+                            </dd>
+                            {% else %}
+                            <dd><a
+                                    href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a>
+                            </dd>
+                            {% endif %}
+                            {% endfor %}
+                        </dl>
+                    </li>
                     {% endfor %}
-                </dl>
-            </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-  
-  <div class="layui-body">
-    <!-- 内容主体区域 -->
-    <div style="padding: 15px;">
-        {% for desc in currentDoc['desc'] %}
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>{{desc}}</legend>
-            </fieldset>
-        {% endfor %}
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>url</legend>
-        </fieldset>
-        <blockquote class="layui-elem-quote">{{requestUrl}}</blockquote>
-        {% if currentDoc.params %}
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>请求参数</legend>
-            </fieldset>
-            <div class="layui-form">
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th>参数名</th>
-                        <th>类型</th>
-                        <th>是否可选</th>
-                        <th>默认值</th>
-                        <th>说明</th>
-                    </tr> 
-                    </thead>
-                    <tbody>
-                        {% for param in currentDoc.params %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <button type="button" class="layui-btn" onclick="openRequestFrame();">默认按钮</button>
+            <!-- 内容主体区域 -->
+            <div style="padding: 15px;">
+                {% for desc in methodDoc['desc'] %}
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>{{desc}}</legend>
+                </fieldset>
+                {% endfor %}
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>url</legend>
+                </fieldset>
+                <blockquote class="layui-elem-quote">{{requestUrl}}</blockquote>
+                {% if methodDoc.params %}
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>请求参数</legend>
+                </fieldset>
+                <div class="layui-form">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th>参数名</th>
+                                <th>类型</th>
+                                <th>是否可选</th>
+                                <th>默认值</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for param in methodDoc.params %}
                             <tr>
                                 <td>{{param['name']}}</td>
                                 <td>{{param['type']}}</td>
@@ -92,103 +122,167 @@
                                 <td>{{param['defaultValue']}}</td>
                                 <td>{{param['desc']}}</td>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>请求示例</legend>
-        </fieldset>
-        <pre id="requestExample"></pre>
-        {% if currentDoc.table %}
-            {% for table in currentDoc.table %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>请求示例</legend>
+                </fieldset>
+                <pre id="requestExample"></pre>
+                {% if methodDoc.table %}
+                {% for table in methodDoc.table %}
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend>{{table.title}}</legend>
                 </fieldset>
                 <div class="layui-form">
                     <table class="layui-table">
                         <thead>
-                        <tr>
-                            {% for th in table.thead %}
+                            <tr>
+                                {% for th in table.thead %}
                                 <th>{{th}}</th>
-                            {% endfor %}
-                        </tr> 
+                                {% endfor %}
+                            </tr>
                         </thead>
                         <tbody>
                             {% for tdArr in table.body %}
-                                <tr>
-                                    {% for td in tdArr %}
-                                        <td>{{td}}</td>
-                                    {% endfor %}
-                                </tr>
+                            <tr>
+                                {% for td in tdArr %}
+                                <td>{{td}}</td>
+                                {% endfor %}
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            {% endfor %}
-        {% endif %}
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>返回示例</legend>
-        </fieldset>
-        <pre id="returnExample"></pre>
-        <div>
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>作者</legend>
-            </fieldset>
-            <blockquote class="layui-elem-quote">{{currentDoc['otherComment']['author']}}</blockquote>
+                {% endfor %}
+                {% endif %}
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>返回示例</legend>
+                </fieldset>
+                <pre id="returnExample"></pre>
+                <div>
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                        <legend>作者</legend>
+                    </fieldset>
+                    <blockquote class="layui-elem-quote">{{methodDoc['otherComment']['author']}}</blockquote>
+                </div>
+                <div>
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                        <legend>创建时间</legend>
+                    </fieldset>
+                    <blockquote class="layui-elem-quote">{{methodDoc['otherComment']['since']}}</blockquote>
+                </div>
+                <div id="formContent" style="display:none;">
+                    {% include 'request.html' %}
+                </div>
+            </div>
         </div>
-        <div>
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>创建时间</legend>
-            </fieldset>
-            <blockquote class="layui-elem-quote">{{currentDoc['otherComment']['since']}}</blockquote>
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            © MorsTiin Doc Copyright
         </div>
     </div>
-  </div>
-  
-  <div class="layui-footer">
-    <!-- 底部固定区域 -->
-    © MorsTiin Doc Copyright
-  </div>
-</div>
-<input type="hidden" value="{{currentDoc['example']['requestExample']}}" id="requestExampleVal">
-<input type="hidden" value="{{currentDoc['example']['returnExample']}}" id="returnExampleVal">
-<script src="{{staticUrl.jqueryPath}}"></script>
-<script src="{{staticUrl.layuiJsPath}}"></script>
-<script>
-// https://www.layui.com/demo/layuiAdmin.html 后台模版示例文档
-//JavaScript代码区域
-layui.use('element', function(){
-  var element = layui.element;
-});
-$("#requestExample").html(syntaxHighlight($("#requestExampleVal").val()));
-$("#returnExample").html(syntaxHighlight($("#returnExampleVal").val()));
-function syntaxHighlight(json) {
-    if(json == ''){
-        return;
-    }
-    json = JSON.parse(json);
-    if (typeof json != 'string') {
-        json = JSON.stringify(json, undefined, 2);
-    }
-    json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
+    <input type="hidden" value="{{methodDoc['example']['requestExample']}}" id="requestExampleVal">
+    <input type="hidden" value="{{methodDoc['example']['returnExample']}}" id="returnExampleVal">
+    <script src="{{staticUrl.jqueryPath}}"></script>
+    <script src="{{staticUrl.layuiJsPath}}"></script>
+    <script>
+        // https://www.layui.com/demo/layuiAdmin.html 后台模版示例文档
+        //JavaScript代码区域
+        layui.use('element', function () {
+            var element = layui.element;
+        });
+        layui.use('form', function () {
+            var form = layui.form;
+            
+            // 新增header内容
+            form.on('submit(addHeaderSection)', function(data){
+                $(data.form).find("#headerSeparator").before(
+                    '<div class="layui-form-item">' +
+                        '<div class="layui-inline">' +
+                            '<label class="layui-form-label">key</label>' +
+                            '<div class="layui-input-inline">' +
+                                '<input type="text" placeholder="Authorization" name="headerKey[]" autocomplete="off" class="layui-input">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="layui-inline">' +
+                            '<label class="layui-form-label">value</label>' +
+                            '<div class="layui-input-inline">' +
+                                '<input type="text" placeholder="This is token value" name="headerValue[]" autocomplete="off" class="layui-input">' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>'
+                );
+                return false;
+            });
+            // 表单提交
+            form.on('submit(confirm)', function(data){
+                console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                return false;
+            });
+
+            form.render();
+        });
+
+        function updateRadio() {
+            layui.use('form', function () {
+                var form = layui.form;
+                form.render();
+            });
         }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
-}
-</script>
+
+        // 请求返回示例内容转换
+        $("#requestExample").html(syntaxHighlight($("#requestExampleVal").val()));
+        $("#returnExample").html(syntaxHighlight($("#returnExampleVal").val()));
+        function syntaxHighlight(json) {
+            if (json == '') {
+                return;
+            }
+            json = JSON.parse(json);
+            if (typeof json != 'string') {
+                json = JSON.stringify(json, undefined, 2);
+            }
+            json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+        // 类简介展示
+        function showClassDesc(content, e) {
+            layui.use('layer', function () {
+                layer.tips(content, e);
+            });
+        }
+
+        function openRequestFrame() {
+            layui.use('layer', function () {
+                layer.open({
+                    type: 1,
+                    title: "请求测试",
+                    skin: 'layui-layer-rim', //加上边框
+                    area: ['50%', '70%'], //宽高
+                    content: $("#formContent").html()
+                });
+            });
+        }
+    </script>
 </body>
+
 </html>

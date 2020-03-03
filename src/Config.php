@@ -14,6 +14,13 @@ class Config
     private static $_instance = NULL;
 
     /**
+     * 文档标题
+     *
+     * @var string
+     */
+    public $title = 'MorsTiin API 文档';
+
+    /**
      * 默认模块
      *
      * @var string
@@ -58,9 +65,9 @@ class Config
      * @var array
      */
     public $staticUrl = [
-        'jqueryPath' => 'https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js',
-        'layuiJsPath' => 'https://www.layuicdn.com/layui-v2.5.6/layui.js',
-        'layuiCSSPath' => 'https://www.layuicdn.com/layui-v2.5.6/css/layui.css'
+        'jqueryPath' => 'http://general.sunanzhi.com/jquery/jquery-3.4.1.min.js',
+        'layuiJsPath' => 'http://general.sunanzhi.com/layui/layui-v2.5.6/layui.js',
+        'layuiCSSPath' => 'http://general.sunanzhi.com/layui/layui-v2.5.6/css/layui.css'
     ];
 
     /**
