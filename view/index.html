@@ -86,7 +86,9 @@
         </div>
 
         <div class="layui-body">
-            <button type="button" class="layui-btn" onclick="openRequestFrame();">默认按钮</button>
+            <button style="bottom: 100px;" type="button"
+                class="layui-btn layui-btn-danger layui-btn-radius layui-fixbar"
+                onclick="openRequestFrame();">请求测试</button>
             <!-- 内容主体区域 -->
             <div style="padding: 15px;">
                 {% for desc in methodDoc['desc'] %}
@@ -195,34 +197,105 @@
         layui.use('element', function () {
             var element = layui.element;
         });
-        layui.use('form', function () {
+        layui.use(['form', 'layer'], function () {
             var form = layui.form;
-            
+
             // 新增header内容
-            form.on('submit(addHeaderSection)', function(data){
+            form.on('submit(addHeaderSection)', function (data) {
                 $(data.form).find("#headerSeparator").before(
                     '<div class="layui-form-item">' +
-                        '<div class="layui-inline">' +
-                            '<label class="layui-form-label">key</label>' +
-                            '<div class="layui-input-inline">' +
-                                '<input type="text" placeholder="Authorization" name="headerKey[]" autocomplete="off" class="layui-input">' +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="layui-inline">' +
-                            '<label class="layui-form-label">value</label>' +
-                            '<div class="layui-input-inline">' +
-                                '<input type="text" placeholder="This is token value" name="headerValue[]" autocomplete="off" class="layui-input">' +
-                            '</div>' +
-                        '</div>' +
+                    '<div class="layui-inline">' +
+                    '<label class="layui-form-label">key</label>' +
+                    '<div class="layui-input-inline">' +
+                    '<input type="text" placeholder="Authorization" name="headerKey[]" autocomplete="off" class="layui-input">' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="layui-inline">' +
+                    '<label class="layui-form-label">value</label>' +
+                    '<div class="layui-input-inline">' +
+                    '<input type="text" placeholder="This is token value" name="headerValue[]" autocomplete="off" class="layui-input">' +
+                    '</div>' +
+                    '</div>' +
                     '</div>'
                 );
                 return false;
             });
             // 表单提交
-            form.on('submit(confirm)', function(data){
-                console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
-                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
-                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            form.on('submit(confirm)', function (data) {
+                $("#submitBtn").attr('disabled', true);
+                var loadingLayer = layer.load(1, {
+                    shade: [0.1,'#fff'] //0.1透明度的白色背景
+                });
+                var fields = $(data.form).serializeArray();
+                var length = fields.length;
+                var requestUrl;
+                var requestBody;
+                var method;
+                var headerKey = new Array();
+                var headerValue = new Array();
+                for (i = 0; i < length; i++) {
+                    switch (fields[i]['name']) {
+                        case 'requestUrl':
+                            requestUrl = fields[i]['value'];
+                            break;
+                        case 'headerKey[0]':
+                            headerKey.push(fields[i]['value']);
+                            break;
+                        case 'headerValue[0]':
+                            headerValue.push(fields[i]['value']);
+                            break;
+                        case 'method':
+                            method = fields[i]['value'];
+                            break;
+                        case 'requestBody':
+                            requestBody = fields[i]['value'];
+                            break;
+                    }
+                }
+                var header = {};
+                for(i = 0; i < headerKey.length; i++){
+                    if(headerKey[i] == '' || headerKey[i] == null){
+                        continue;
+                    }
+                    header[ headerKey[i] ] = headerValue[i];
+                }
+                var headerJson = JSON.stringify( header );
+                try {
+                    $.ajax({
+                        headers:(headerJson == '' || headerJson == null) ? {} : JSON.parse(headerJson),
+                        type: method,
+                        url: requestUrl,
+                        data: (requestBody == '' || requestBody == null) ? {} : JSON.parse(requestBody),
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res)
+                            layer.open({
+                                type: 1,
+                                title: '返回数据',
+                                skin: 'layui-layer-demo', //样式类名
+                                closeBtn: 0, //不显示关闭按钮
+                                anim: 2,
+                                area: ['60%', '90%'],
+                                shadeClose: true, //开启遮罩关闭
+                                content: '<pre>'+syntaxHighlight(JSON.stringify(res))+'</pre>'
+                            });
+                        }
+                    });
+                } catch (error) {
+                    console.log(JSON.stringify( error ))
+                    layer.open({
+                        type: 1,
+                        title: '请求错误',
+                        skin: 'layui-layer-demo', //样式类名
+                        closeBtn: 0, //不显示关闭按钮
+                        anim: 2,
+                        shadeClose: true, //开启遮罩关闭
+                        content: JSON.stringify( error )
+                    });
+                }
+                layer.close(loadingLayer);
+                $("#submitBtn").removeAttr('disabled');
+                
                 return false;
             });
 
@@ -277,7 +350,7 @@
                     type: 1,
                     title: "请求测试",
                     skin: 'layui-layer-rim', //加上边框
-                    area: ['50%', '70%'], //宽高
+                    area: ['70%', '80%'], //宽高
                     content: $("#formContent").html()
                 });
             });

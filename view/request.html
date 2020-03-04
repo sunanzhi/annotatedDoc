@@ -1,5 +1,11 @@
-<div style="padding: 0 20px 20px 20px;">
+<div style="padding: 20px;">
     <form class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求链接</label>
+            <div class="layui-input-block">
+              <input type="text" name="requestUrl" placeholder="请求链接" autocomplete="off" value="{{requestUrl}}" class="layui-input">
+            </div>
+          </div>
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
             <legend>header 头部信息</legend>
         </fieldset>
@@ -7,38 +13,35 @@
             <div class="layui-inline">
                 <label class="layui-form-label">key</label>
                 <div class="layui-input-inline">
-                    <input type="text" placeholder="Authorization" name="headerKey[]" autocomplete="off" class="layui-input">
+                    <input type="text" placeholder="Authorization" value="Authorization" name="headerKey[]" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">value</label>
                 <div class="layui-input-inline">
-                    <input type="text" placeholder="This is token value" name="headerValue[]" autocomplete="off" class="layui-input">
+                    <input type="text" placeholder="This is token value" value="application" name="headerValue[]" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
-        <!-- <div name="addHeaderSection">ddddd</div> -->
         <fieldset id="headerSeparator" class="layui-elem-field layui-field-title" style="margin-top: 30px;">
             <legend><p title="新增头部信息字段"><button lay-submit lay-filter="addHeaderSection" type="button" class="layui-btn layui-btn-sm"><i class="layui-icon"></i></button></p></legend>
         </fieldset>
         <div class="layui-form-item">
             <label class="layui-form-label">请求方式</label>
             <div class="layui-input-block" onclick="updateRadio();">
-                <input type="radio" name="sex" value="1" title="post" checked>
-                <input type="radio" name="sex" value="2" title="get">
+                <input type="radio" name="method" value="POST" title="POST" checked>
+                <input type="radio" name="method" value="GET" title="GET">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">请求body</label>
             <div class="layui-input-block">
                 <textarea placeholder="请输入内容" class="layui-textarea"
-                    id="requestBody">{{methodDoc['example']['requestExample']}}</textarea>
+                    name="requestBody">{{methodDoc['example']['requestExample']}}</textarea>
             </div>
         </div>
         <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="confirm">立即提交</button>
-            </div>
+            <button class="layui-btn" id="submitBtn" lay-submit lay-filter="confirm">立即提交</button>
         </div>
     </form>
 </div>
