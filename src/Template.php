@@ -12,7 +12,7 @@ class Template
         $twig = new \Twig\Environment($loader);
         $module = new Module();
         $res = $module->getDoc();
-        
+
         return $twig->render('index.html', $res);
     }
 }

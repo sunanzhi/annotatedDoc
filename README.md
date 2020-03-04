@@ -53,7 +53,7 @@ defaultModule | string | 默认模块 例：`example`
 defaultClass | string | 默认类
 defaultMethod | string | 默认方法
 moduleList | array | 模块列表
-moduleList.path | string | 模块的绝对路金 例：`/Users/MorsTiin/sites/projects/annotatedDoc/app/example/api`
+moduleList.path | string | 模块的绝对路径 例：`/Users/MorsTiin/sites/projects/annotatedDoc/app/example/api`
 moduleList.namespace | string | 模块下接口的命名空间 例：`app\\example\\api`
 moduleList.name | string | 模块名 例：`example`
 staticUrl | array | 样式链接，考虑到使用者可能用自己项目的layui/jq 

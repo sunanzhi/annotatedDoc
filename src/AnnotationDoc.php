@@ -124,13 +124,15 @@ class AnnotationDoc
                 case 'returnExample':
                     $i++;
                     $exampleJson = '';
+                    $lastChar = '';
                     for ($i;; $i++) {
                         $value = trim($doc[$i]);
                         if (in_array($value, ['*/', '*'])) {
                             $i--;
-                            $exampleJson = "{" . (string) $exampleJson;
+                            $exampleJson = ($lastChar == "]" ? "[" : "{") . (string) $exampleJson;
                             break;
                         }
+                        $lastChar = substr($value,-1);
                         $value = trim(substr($value, 1));
                         $exampleJson .= $value;
                     }
