@@ -117,6 +117,7 @@ class AnnotationDoc
                 case 'author':
                 case 'since':
                 case 'see':
+                case 'requestUrl':
                     $otherComment[$tag] = substr($value, $tagEndPosition + 1);
                     break;
                 case 'requestExample':

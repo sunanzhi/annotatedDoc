@@ -80,6 +80,19 @@ staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com
 ```
 ----
 
+> @requestUrl 请求链接
+
+**使用方式**
+
+**注意：如果不填写默认按照 `模块/类名/方法` 方式显示**
+
+```
+/**
+ * @requestUrl https://www.domain.com/module/api/get
+ */
+```
+----
+
 > @table 表格类型
 
 **使用方式**

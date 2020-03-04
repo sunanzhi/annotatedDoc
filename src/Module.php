@@ -78,7 +78,7 @@ class Module
             'defaultClass' => $config->defaultClass,
             'defaultMethod' => $config->defaultMethod,
             'resClassList' => $resClassList,
-            'requestUrl' => $requestUrl,
+            'requestUrl' => $methodDoc['otherComment']['requestUrl'] ?? $requestUrl,
             'resModule' => $resModule,
             'classDoc' => $classDoc,
             'methodDoc' => $methodDoc,
