@@ -60,6 +60,13 @@ class Config
     ];
 
     /**
+     * 备案号
+     *
+     * @var string
+     */
+    public $miitbeian = '';
+
+    /**
      * 静态样式url
      *
      * @var array

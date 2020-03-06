@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>{{title}}</title>
-    <link rel="stylesheet" href="{{staticUrl.layuiCSSPath}}">
+    <title>{{config.title}}</title>
+    <link rel="stylesheet" href="{{config.staticUrl.layuiCSSPath}}">
 </head>
 <style>
     pre {
@@ -39,15 +39,15 @@
     <div class="layui-layout layui-layout-admin">
         <div class="layui-header">
             <a href="/doc/index.php">
-                <div class="layui-logo">{{title}}</div>
+                <div class="layui-logo">{{config.title}}</div>
             </a>
             <!-- 头部区域（可配合layui已有的水平导航） -->
             <ul class="layui-nav layui-layout-left">
                 <li class="layui-nav-item">
-                    <a href="javascript:;">{{defaultModule}}</a>
+                    <a href="javascript:;">{{config.defaultModule}}</a>
                     <dl class="layui-nav-child">
-                        {% for module in resModule %}
-                        {% if module == defaultModule %}
+                        {% for module in availableModule %}
+                        {% if module == config.defaultModule %}
                         <dd class="layui-this"><a href="/doc/index.php?module={{module}}" .'">{{module}}</a></dd>
                         {% else %}
                         <dd><a href="/doc/index.php?module={{module}}">{{module}}</a></dd>
@@ -61,14 +61,14 @@
             <div class="layui-side-scroll">
                 <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
                 <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                    {% for class in resClassList %}
+                    {% for class in classList %}
                     <li class="layui-nav-item layui-nav-itemed">
                         <a class="" href="javascript:;" onclick="showClassDesc('{{classDoc}}', this);">
                             {{class.className}}
                         </a>
                         <dl class="layui-nav-child">
                             {% for doc in class.docList %}
-                            {% if class.module == defaultModule and class.className == defaultClass and doc.method == defaultMethod %}
+                            {% if class.module == config.defaultModule and class.className == config.defaultClass and doc.method == config.defaultMethod %}
                             <dd class='layui-this'><a
                                     href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a>
                             </dd>
@@ -182,15 +182,15 @@
             </div>
         </div>
 
-        <div class="layui-footer">
-            <!-- 底部固定区域 -->
-            © MorsTiin Doc Copyright
+        <div class="layui-footer" style="align-content: center;">
+            <a href="https://github.com/sunanzhi/annotatedDoc" target="_blank" rel="nofollow">© MorsTiin Doc MIT License &nbsp;&nbsp;||&nbsp;&nbsp; GitHub</a>
+            <a style="float: right;" href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">{{config.miitbeian}}</a>
         </div>
     </div>
     <input type="hidden" value="{{methodDoc['example']['requestExample']}}" id="requestExampleVal">
     <input type="hidden" value="{{methodDoc['example']['returnExample']}}" id="returnExampleVal">
-    <script src="{{staticUrl.jqueryPath}}"></script>
-    <script src="{{staticUrl.layuiJsPath}}"></script>
+    <script src="{{config.staticUrl.jqueryPath}}"></script>
+    <script src="{{config.staticUrl.layuiJsPath}}"></script>
     <script>
         // https://www.layui.com/demo/layuiAdmin.html 后台模版示例文档
         //JavaScript代码区域
@@ -224,7 +224,7 @@
             form.on('submit(confirm)', function (data) {
                 $("#submitBtn").attr('disabled', true);
                 var loadingLayer = layer.load(1, {
-                    shade: [0.1,'#fff'] //0.1透明度的白色背景
+                    shade: [0.1, '#fff'] //0.1透明度的白色背景
                 });
                 var fields = $(data.form).serializeArray();
                 var length = fields.length;
@@ -253,16 +253,16 @@
                     }
                 }
                 var header = {};
-                for(i = 0; i < headerKey.length; i++){
-                    if(headerKey[i] == '' || headerKey[i] == null){
+                for (i = 0; i < headerKey.length; i++) {
+                    if (headerKey[i] == '' || headerKey[i] == null) {
                         continue;
                     }
-                    header[ headerKey[i] ] = headerValue[i];
+                    header[headerKey[i]] = headerValue[i];
                 }
-                var headerJson = JSON.stringify( header );
+                var headerJson = JSON.stringify(header);
                 try {
                     $.ajax({
-                        headers:(headerJson == '' || headerJson == null) ? {} : JSON.parse(headerJson),
+                        headers: (headerJson == '' || headerJson == null) ? {} : JSON.parse(headerJson),
                         type: method,
                         url: requestUrl,
                         data: (requestBody == '' || requestBody == null) ? {} : JSON.parse(requestBody),
@@ -277,12 +277,12 @@
                                 anim: 2,
                                 area: ['60%', '90%'],
                                 shadeClose: true, //开启遮罩关闭
-                                content: '<pre>'+syntaxHighlight(JSON.stringify(res))+'</pre>'
+                                content: '<pre>' + syntaxHighlight(JSON.stringify(res)) + '</pre>'
                             });
                         }
                     });
                 } catch (error) {
-                    console.log(JSON.stringify( error ))
+                    console.log(JSON.stringify(error))
                     layer.open({
                         type: 1,
                         title: '请求错误',
@@ -290,12 +290,12 @@
                         closeBtn: 0, //不显示关闭按钮
                         anim: 2,
                         shadeClose: true, //开启遮罩关闭
-                        content: JSON.stringify( error )
+                        content: JSON.stringify(error)
                     });
                 }
                 layer.close(loadingLayer);
                 $("#submitBtn").removeAttr('disabled');
-                
+
                 return false;
             });
 

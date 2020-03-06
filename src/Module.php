@@ -31,15 +31,15 @@ class Module
         // 遍历模块
         foreach ($config->moduleList as $module) {
             // 有效模块
-            $resModule[] = $module['name'];
+            $availableModule[] = $module['name'];
             if ($module['name'] == $config->defaultModule) {
                 // 遍历类
-                $classList = scandir("{$module['path']}");
-                foreach ($classList as $classFile) {
-                    if (in_array($classFile, $config->forbiddenLevel)) {
+                $classFileList = scandir("{$module['path']}");
+                foreach ($classFileList as $classFileName) {
+                    if (in_array($classFileName, $config->forbiddenLevel)) {
                         continue;
                     }
-                    $className = substr($classFile, 0, -4);
+                    $className = substr($classFileName, 0, -4);
 
                     $class = new \ReflectionClass("{$module['namespace']}\\{$className}");
                     if ($class->isInstance($class)) {
@@ -63,26 +63,22 @@ class Module
                             'method' => $method->name,
                         ];
                     }
-                    $resClassList[] = [
+                    $classList[] = [
                         'module' => $module['name'],
                         'className' => $className,
                         'docList' => $docList,
                     ];
                 }
             }
-
         }
+
         return [
-            'title' => $config->title,
-            'defaultModule' => $config->defaultModule,
-            'defaultClass' => $config->defaultClass,
-            'defaultMethod' => $config->defaultMethod,
-            'resClassList' => $resClassList,
-            'requestUrl' => $methodDoc['otherComment']['requestUrl'] ?? $requestUrl,
-            'resModule' => $resModule,
-            'classDoc' => $classDoc,
-            'methodDoc' => $methodDoc,
-            'staticUrl' => $config->staticUrl,
+            'config' => $config, // 配置文件
+            'classList' => $classList, // 类列表
+            'requestUrl' => $methodDoc['otherComment']['requestUrl'] ?? $requestUrl, // 请求url
+            'availableModule' => $availableModule, // 可用模块
+            'classDoc' => $classDoc, // 当前类文档说明
+            'methodDoc' => $methodDoc, // 当前方法文档 
         ];
     }
 }
