@@ -11,6 +11,7 @@ use phpDocumentor\Reflection\DocBlock\Tags\Since;
 use phpDocumentor\Reflection\DocBlockFactory;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
 
 /**
  * 处理文档内容
@@ -186,11 +187,13 @@ class AnnotationDoc
         $methodPparams = $method->getParameters();
         foreach ($methodPparams as $param) {
             $paramName = $param->getName();
+            $reflectionType = $param->getType();
+            assert($reflectionType instanceof ReflectionNamedType);
             $this->methodParameters[$paramName] = [
                 'default' => $param->isDefaultValueAvailable(),
                 'defaultValue' => $param->isDefaultValueAvailable() ? $param->getDefaultValue() : '无',
                 'name' => $paramName,
-                'type' => $param->getType()->getName(),
+                'type' => $reflectionType->getName(),
             ];
         }
     }
