@@ -78,6 +78,15 @@ class Config
     ];
 
     /**
+     * 可用标签
+     *
+     * @var array
+     */
+    public $availableTags = [
+        'param', 'resParam', 'author', 'since', 'link', 'requestExample', 'returnExample', 'requestUrl', 'table', 'changeLog'
+    ];
+
+    /**
      * 获取单例
      *
      * @return Config

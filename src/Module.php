@@ -56,7 +56,7 @@ class Module
                         }
                         if ($method->name == $config->defaultMethod) {
                             $requestUrl = '/' . strtolower($module['name']) . '/' . $config->defaultClass . '/' . $config->defaultMethod;
-                            $methodDoc = AnnotationDoc::handleMethodComment($method);
+                            $methodDoc = (new AnnotationDoc())->handleMethodComment($method);
                         }
                         // 处理文档
                         $docList[] = [
@@ -71,11 +71,10 @@ class Module
                 }
             }
         }
-
         return [
             'config' => $config, // 配置文件
             'classList' => $classList, // 类列表
-            'requestUrl' => $methodDoc['otherComment']['requestUrl'] ?? $requestUrl, // 请求url
+            'requestUrl' => empty($methodDoc['requestUrl']) ? $requestUrl : $methodDoc['requestUrl'], // 请求url
             'availableModule' => $availableModule, // 可用模块
             'classDoc' => $classDoc, // 当前类文档说明
             'methodDoc' => $methodDoc, // 当前方法文档 

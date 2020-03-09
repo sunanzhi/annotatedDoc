@@ -5,7 +5,7 @@ php 注释自动生成文档
 
 ### 效果链接
 
-> http://tp6.sunanzhi.com/doc/index.php?module=makeup&class=Product&method=list
+> http://annotateddoc.sunanzhi.com/doc/index.php?module=makeup&class=Product&method=list
 
 ----
 
@@ -60,14 +60,30 @@ staticUrl | array | 样式链接，考虑到使用者可能用自己项目的lay
 staticUrl.jqueryPath | string | jquery路径 例：`https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js`
 staticUrl.layuiJsPath | string | layuiJs路径 例：`https://www.layuicdn.com/layui-v2.5.6/layui.js`
 staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com/layui-v2.5.6/css/layui.css`
+availableTags | array | 默认可用标签
 
 ----
+
+### tags 列表
+
+标签名 | 描述 | 是否支持多个
+----- | ---- | ----
+param | 请求参数 | 是
+resParam | 返回字段 | 是
+requestUrl | 请求url ｜ 否
+requestExample | 请求示例 | 是
+returnExample | 返回示例 | 是
+table | 表格 | 是
+author | 作者 | 否
+since | 创建时间 | 否
+link | 引用链接 | 是
+changeLog | 变更记录 | 否
 
 ### 注解tag
 
 ----
 
-> @param 参数类型
+> @param 参数，支持多个
 
 **使用方式**
 
@@ -76,6 +92,21 @@ staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com
  * @param integer $userId 用户id
  * @param string $username 用户名
  * @param array $extra 拓展参数
+ */
+```
+----
+
+> @resParam 返回结果字段，支持多个
+
+**使用方式**
+
+```
+/**
+ * @resParam integer $userId 用户id
+ * @resParam string $username 用户名
+ * @resParam array $extra 拓展参数
+ * @resParam string $extra.key 拓展参数1
+ * @resParam string $extra.value 拓展参数2
  */
 ```
 ----
@@ -93,7 +124,7 @@ staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com
 ```
 ----
 
-> @table 表格类型
+> @table 表格类型，支持多个
 
 **使用方式**
 
@@ -111,7 +142,7 @@ staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com
 
 ----
 
-> @requestExample 请求示例
+> @requestExample 请求示例，支持多个
 
 **使用方式 json数据格式**
 
@@ -128,7 +159,7 @@ staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com
  */
 ```
 
-> @returnExample 返回示例
+> @returnExample 返回示例，支持多个
 
 **使用方式 json数据格式**
 
@@ -164,7 +195,7 @@ staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com
 
 ```
 /**
- * @author MorsTiin
+ * @author MorsTiin <AnnotatedDoc@Test.com>
  */
 ```
 
@@ -179,43 +210,66 @@ staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com
  * @since 2020.2.20
  */
 ```
-----
-
-### 特别注意
-
-1、每个tag之后隔开一行
-2、有问题邮件或者发issue
-3、……
 
 ----
 
-### 一个简单示例
+> @link 参考链接，支持多个
+
+**使用方式**
 
 ```
 /**
- * 产品列表分页
+ * @link https://github.com/sunanzhi/annotatedDoc
+ */
+```
+
+----
+
+> @changeLog 变更日志，支持多个
+
+**使用方式**
+
+```
+/**
+ * @changeLog {"author": "sunanzhi@hotmail.com",  "time": "2020-03-09 11:16:00", "event":"更换文档注释"}
+ */
+```
+
+----
+
+### 一个简单示例，仅供参考，如有问题邮件或发布issue
+
+```
+/**
+ * 我是示例标题，首行默认标题
  * 
- * @table 返回数据说明
- * key | type | desc
- * page | array | 分页配置
- * page.total | string | 总数
- * page.limit | string | 每页限制
- * page.current | string | 当前页
- * page.lastPage | string | 最后一页
- * items | array | 产品分页数据
- * items.productId | string | 产品id
- * items.name | string | 产品名
- * items.image | string | 产品图
- * items.pcId | string | 产品分类id
- * items.createdTime | string | 产品创建时间
- * items.pcName | string | 产品分类名
+ * 这是一段接口描述，如有则正常显示
+ * 
+ * @requestUrl 我是请求链接，可以不用填写
+ * 
+ * @table 我是表格标题
+ * 表头 | 表头 
+ * key1 | value1
+ * key2 | value2
+ * key3 | value3
+ * key4 | value4
+ * 
+ * @param string $param 我是参数描述
+ * @param string $param 我是参数描述
  *
- * @param integer $page 页码
- * @param integer $limit 每页限制
+ * @resParam string $param 我是返回参数描述
+ * @resParam string $param 我是返回参数描述
+ * @resParam string $param 我是返回参数描述
+ *
  * @return array
+ *
  * @requestExample {
- *      "page":1,
- *      "limit":"20"
+ *      "key1":"我是请求示例",
+ *      "value1":"我是请求示例"
+ *  }
+ * @requestExample {
+ *      "key2":"我是请求示例",
+ *      "value2":"我是请求示例"
  *  }
  *  
  * @returnExample {
@@ -227,17 +281,35 @@ staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com
  *      },
  *      "items": [
  *          {
- *              "productId": "29",
- *              "name": "Twelve-Color Animal Eyeshado Palette",
- *              "image": "/upload/image/product/2020011 cdccb0de01bb5643ba8adb0fb60fe7fb.png",
- *              "pcId": "10",
- *              "createdTime": "2020-01-17 18:18:09",
- *              "pcName": "Eyeshadow palette"
+ *              "key1": "我是返回示例"
+ *          },
+ *          {
+ *              "key2": "我是返回示例"
+ *          }
+ *      ]
+ *  }
+ * @returnExample {
+ *      "page": {
+ *          "total": "4",
+ *          "limit": "1",
+ *          "current": "1",
+ *          "lastPage": "4"
+ *      },
+ *      "items": [
+ *          {
+ *              "key1": "我是返回示例"
+ *          },
+ *          {
+ *              "key2": "我是返回示例"
  *          }
  *      ]
  *  }
  * 
  * @author sunanzhi <sunanzhi@hotmail.com>
  * @since 2020.2.16
+ * @changeLog {"author": "sunanzhi@hotmail.com", "time": "2020.03.09 12:12:12", "event": "接口更换文档"}
+ * @changeLog {"author": "sunanzhi@hotmail.com", "time": "2020.03.10 12:12:12", "event": "接口更换文档"}
+ * @link https://github.com/sunanzhi/annotatedDoc
+ * @link https://github.com/sunanzhi/annotatedDoc
  */
 ```

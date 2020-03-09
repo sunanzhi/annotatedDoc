@@ -9,17 +9,18 @@
 </head>
 <style>
     pre {
-        outline: 1px solid #ccc;
-        padding: 5px;
+        padding: 15px;
         margin: 5px;
+        font-size: 15px;
+        line-height: 23px;
     }
 
     .string {
-        color: green;
+        color: red;
     }
 
     .number {
-        color: darkorange;
+        color: green;
     }
 
     .boolean {
@@ -27,11 +28,11 @@
     }
 
     .null {
-        color: magenta;
+        color: yellow;
     }
 
     .key {
-        color: red;
+        color: black;
     }
 </style>
 
@@ -91,15 +92,12 @@
                 onclick="openRequestFrame();">请求测试</button>
             <!-- 内容主体区域 -->
             <div style="padding: 15px;">
-                {% for desc in methodDoc['desc'] %}
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>{{desc}}</legend>
-                </fieldset>
-                {% endfor %}
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>url</legend>
-                </fieldset>
-                <blockquote class="layui-elem-quote">{{requestUrl}}</blockquote>
+                {% if methodDoc.description %}
+                <blockquote class="layui-elem-quote">说明: {{methodDoc.description}}</blockquote>
+                {% endif %}
+                <blockquote class="layui-elem-quote">标题: {{methodDoc.summary}}</blockquote>
+                <blockquote class="layui-elem-quote">请求链接: {{requestUrl}}</blockquote>
+
                 {% if methodDoc.params %}
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend>请求参数</legend>
@@ -129,10 +127,77 @@
                     </table>
                 </div>
                 {% endif %}
+
+                {% if methodDoc.requestExample %}
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend>请求示例</legend>
                 </fieldset>
-                <pre id="requestExample"></pre>
+                <div class="layui-tab layui-tab-card">
+                    <ul class="layui-tab-title">
+                        {% for key, example in methodDoc.requestExample %}
+                        <li {% if key == 0 %}class="layui-this" {% endif %}>{% if key == 0 %}默认{% else %}示例 -
+                            {{key}}{% endif %}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="layui-tab-content">
+                        {% for key, example in methodDoc.requestExample %}
+                        <div class="layui-tab-item {% if key == 0 %}layui-show{% endif %}">
+                            <input type="hidden" name="requestExample" value="{{example}}">
+                            <pre id="requestExampleValue{{key}}"></pre>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if methodDoc.resParams %}
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>返回字段说明</legend>
+                </fieldset>
+                <div class="layui-form">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th>参数名</th>
+                                <th>类型</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for param in methodDoc.resParams %}
+                            <tr>
+                                <td>{{param['name']}}</td>
+                                <td>{{param['type']}}</td>
+                                <td>{{param['desc']}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                {% if methodDoc.returnExample %}
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>返回示例</legend>
+                </fieldset>
+                <div class="layui-tab layui-tab-card">
+                    <ul class="layui-tab-title">
+                        {% for key, example in methodDoc.returnExample %}
+                        <li {% if key == 0 %}class="layui-this" {% endif %}>{% if key == 0 %}默认{% else %}示例 -
+                            {{key}}{% endif %}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="layui-tab-content">
+                        {% for key, example in methodDoc.returnExample %}
+                        <div class="layui-tab-item {% if key == 0 %}layui-show{% endif %}">
+                            <input type="hidden" name="returnExample" value="{{example}}">
+                            <pre id="returnExampleValue{{key}}"></pre>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
                 {% if methodDoc.table %}
                 {% for table in methodDoc.table %}
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
@@ -160,22 +225,38 @@
                 </div>
                 {% endfor %}
                 {% endif %}
+
+                {% if methodDoc.link %}
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>返回示例</legend>
+                    <legend>参考链接</legend>
                 </fieldset>
-                <pre id="returnExample"></pre>
-                <div>
-                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                        <legend>作者</legend>
-                    </fieldset>
-                    <blockquote class="layui-elem-quote">{{methodDoc['otherComment']['author']}}</blockquote>
-                </div>
-                <div>
-                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                        <legend>创建时间</legend>
-                    </fieldset>
-                    <blockquote class="layui-elem-quote">{{methodDoc['otherComment']['since']}}</blockquote>
-                </div>
+                {% for link in methodDoc.link %}
+                <blockquote class="layui-elem-quote"><a href="{{link}}" target="_blank">{{link}}</a></blockquote>
+                {% endfor %}
+                {% endif %}
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>接口发展时间线</legend>
+                </fieldset>
+                <ul class="layui-timeline">
+                    {% for log in methodDoc.changeLog %}
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis"></i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">{{log.event}}</h3>
+                            <p>{{log.time}} &nbsp;&nbsp;||&nbsp;&nbsp; {{log.author}}</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis"></i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">创建接口</h3>
+                            <p>{{methodDoc.since}} &nbsp;&nbsp;||&nbsp;&nbsp; {{methodDoc.author}}</p>
+                        </div>
+                    </li>
+                </ul>
+
                 <div id="formContent" style="display:none;">
                     {% include 'request.html' %}
                 </div>
@@ -183,8 +264,10 @@
         </div>
 
         <div class="layui-footer" style="align-content: center;">
-            <a href="https://github.com/sunanzhi/annotatedDoc" target="_blank" rel="nofollow">© MorsTiin Doc MIT License &nbsp;&nbsp;||&nbsp;&nbsp; GitHub</a>
-            <a style="float: right;" href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">{{config.miitbeian}}</a>
+            <a href="https://github.com/sunanzhi/annotatedDoc" target="_blank" rel="nofollow">© MorsTiin Doc MIT License
+                &nbsp;&nbsp;||&nbsp;&nbsp; GitHub</a>
+            <a style="float: right;" href="http://www.miitbeian.gov.cn/" target="_blank"
+                rel="nofollow">{{config.miitbeian}}</a>
         </div>
     </div>
     <input type="hidden" value="{{methodDoc['example']['requestExample']}}" id="requestExampleVal">
@@ -308,10 +391,13 @@
                 form.render();
             });
         }
-
         // 请求返回示例内容转换
-        $("#requestExample").html(syntaxHighlight($("#requestExampleVal").val()));
-        $("#returnExample").html(syntaxHighlight($("#returnExampleVal").val()));
+        $("input[name='requestExample']").each((key, elem) => {
+            $("#requestExampleValue" + key).html(syntaxHighlight($(elem).val()));
+        });
+        $("input[name='returnExample']").each((key, elem) => {
+            $("#returnExampleValue" + key).html(syntaxHighlight($(elem).val()));
+        });
         function syntaxHighlight(json) {
             if (json == '') {
                 return;
