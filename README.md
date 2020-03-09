@@ -71,7 +71,7 @@ extraTags | array | 拓展标签
 ----- | ---- | ----
 param | 请求参数 | 是
 resParam | 返回字段 | 是
-requestUrl | 请求url ｜ 否
+requestUrl | 请求url | 否
 requestExample | 请求示例 | 是
 returnExample | 返回示例 | 是
 table | 表格 | 是
