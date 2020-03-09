@@ -141,7 +141,7 @@ class AnnotationDoc
         $this->handleMethodParameters($method);
         // 文档内容
         $docComment = $method->getDocComment();
-        $factory  = DocBlockFactory::createInstance(['resParam' => ResParam::class, 'changeLog' => ChangeLog::class]);
+        $factory  = DocBlockFactory::createInstance(Config::getInstance()->getExtraTags());
         $docblock = $factory->create($docComment);
         // 标题
         $summary = $docblock->getSummary();

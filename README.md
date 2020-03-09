@@ -61,6 +61,7 @@ staticUrl.jqueryPath | string | jquery路径 例：`https://cdn.bootcss.com/jque
 staticUrl.layuiJsPath | string | layuiJs路径 例：`https://www.layuicdn.com/layui-v2.5.6/layui.js`
 staticUrl.layuiCSSPath | string | layuiCSS路径 例：`https://www.layuicdn.com/layui-v2.5.6/css/layui.css`
 availableTags | array | 默认可用标签
+extraTags | array | 拓展标签
 
 ----
 

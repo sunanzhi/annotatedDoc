@@ -1,6 +1,9 @@
 <?php
 namespace MorsTiin\AnnotatedDoc;
 
+use MorsTiin\AnnotatedDoc\Tags\ChangeLog;
+use MorsTiin\AnnotatedDoc\Tags\ResParam;
+
 /**
  * 配置文件
  */
@@ -85,6 +88,32 @@ class Config
     public $availableTags = [
         'param', 'resParam', 'author', 'since', 'link', 'requestExample', 'returnExample', 'requestUrl', 'table', 'changeLog'
     ];
+
+    private $extraTags = [
+        'resParam' => ResParam::class, 
+        'changeLog' => ChangeLog::class
+    ];
+
+    /**
+     * 设置拓展tags
+     *
+     * @param array $tags
+     * @return void
+     */
+    public function setExtraTags(array $tags)
+    {
+        $this->extraTags = array_merge($this->extraTags, $tags);
+    }
+
+    /**
+     * 获取拓展tags
+     *
+     * @return array
+     */
+    public function getExtraTags()
+    {
+        return $this->extraTags;
+    }
 
     /**
      * 获取单例
