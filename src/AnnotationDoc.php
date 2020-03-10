@@ -103,32 +103,15 @@ class AnnotationDoc
      */
     public static function handleClassComment(ReflectionClass $class): string
     {
-        $doc = explode("\n", $class->getDocComment());
-        $classDoc = [];
-        for($i = 0;; $i++){
-            // 删除首尾空格
-            $value = trim($doc[$i]);
-            if ($value == '') {
-                break;
-            }
-            // 无用注解
-            if (in_array($value, ['/**', '*'])) {
-                continue;
-            }
-            // 注释结束判断
-            if ($value == '*/') {
-                break;
-            }
-            // 空内容过滤
-            if ($value == ''){
-                continue;
-            }
-            // 删除首位*字符
-            $value = trim(substr($value, 1));
-            $classDoc[] = $value;
-        }
+        $docComment = $class->getDocComment();
+        $factory  = DocBlockFactory::createInstance(Config::getInstance()->getExtraTags());
+        $docblock = $factory->create($docComment);
+        // 标题
+        $summary = $docblock->getSummary();
+        // 描述
+        $description = $docblock->getDescription()->render();
 
-        return implode('\n', $classDoc);
+        return $summary.' '.$description;
     }
 
     /**
