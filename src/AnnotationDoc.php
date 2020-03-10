@@ -103,13 +103,17 @@ class AnnotationDoc
      */
     public static function handleClassComment(ReflectionClass $class): string
     {
-        $docComment = $class->getDocComment();
-        $factory  = DocBlockFactory::createInstance(Config::getInstance()->getExtraTags());
-        $docblock = $factory->create($docComment);
-        // 标题
-        $summary = $docblock->getSummary();
-        // 描述
-        $description = $docblock->getDescription()->render();
+        try{
+            $docComment = $class->getDocComment();
+            $factory  = DocBlockFactory::createInstance(Config::getInstance()->getExtraTags());
+            $docblock = $factory->create($docComment);
+            // 标题
+            $summary = $docblock->getSummary();
+            // 描述
+            $description = $docblock->getDescription()->render();
+        }catch(\Throwable $e){
+            return '';
+        }
 
         return $summary.' '.$description;
     }
