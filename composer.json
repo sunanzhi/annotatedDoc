@@ -17,6 +17,7 @@
     "autoload": {
         "psr-4": {
             "MorsTiin\\AnnotatedDoc\\": "src",
+            "MorsTiin\\AnnotatedDoc\\Tags\\": "src/tags/",
             "MorsTiin\\AnnotatedDoc\\Tests\\": "tests"
         }
     }
