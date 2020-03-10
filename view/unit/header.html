@@ -1,0 +1,20 @@
+<div class="layui-header">
+    <a href="/doc/index.php">
+        <div class="layui-logo">{{config.title}}</div>
+    </a>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left">
+        <li class="layui-nav-item">
+            <a href="javascript:;">{{config.defaultModule}}</a>
+            <dl class="layui-nav-child">
+                {% for module in availableModule %}
+                {% if module == config.defaultModule %}
+                <dd class="layui-this"><a href="/doc/index.php?module={{module}}" .'">{{module}}</a></dd>
+                {% else %}
+                <dd><a href="/doc/index.php?module={{module}}">{{module}}</a></dd>
+                {% endif%}
+                {% endfor %}
+            </dl>
+        </li>
+    </ul>
+</div>

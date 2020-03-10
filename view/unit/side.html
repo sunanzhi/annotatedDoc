@@ -1,0 +1,27 @@
+<div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <ul class="layui-nav layui-nav-tree" lay-filter="test">
+            {% for class in classList %}
+            <li class="layui-nav-item layui-nav-itemed">
+                <a class="" href="javascript:;" onclick="showClassDesc('{{classDoc}}', this);">
+                    {{class.className}}
+                </a>
+                <dl class="layui-nav-child">
+                    {% for doc in class.docList %}
+                    {% if class.module == config.defaultModule and class.className == config.defaultClass and doc.method == config.defaultMethod %}
+                    <dd class='layui-this'><a
+                            href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a>
+                    </dd>
+                    {% else %}
+                    <dd><a
+                            href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a>
+                    </dd>
+                    {% endif %}
+                    {% endfor %}
+                </dl>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

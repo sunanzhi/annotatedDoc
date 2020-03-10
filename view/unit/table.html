@@ -1,0 +1,27 @@
+{% if methodDoc.table %}
+{% for table in methodDoc.table %}
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend><h5>{{table.title}}</h5></legend>
+</fieldset>
+<div class="layui-form">
+    <table class="layui-table">
+        <thead>
+            <tr>
+                {% for th in table.thead %}
+                <th>{{th}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for tdArr in table.body %}
+            <tr>
+                {% for td in tdArr %}
+                <td>{{td}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endfor %}
+{% endif %}

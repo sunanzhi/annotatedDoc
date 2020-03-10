@@ -38,237 +38,84 @@
 
 <body class="layui-layout-body">
     <div class="layui-layout layui-layout-admin">
-        <div class="layui-header">
-            <a href="/doc/index.php">
-                <div class="layui-logo">{{config.title}}</div>
-            </a>
-            <!-- 头部区域（可配合layui已有的水平导航） -->
-            <ul class="layui-nav layui-layout-left">
-                <li class="layui-nav-item">
-                    <a href="javascript:;">{{config.defaultModule}}</a>
-                    <dl class="layui-nav-child">
-                        {% for module in availableModule %}
-                        {% if module == config.defaultModule %}
-                        <dd class="layui-this"><a href="/doc/index.php?module={{module}}" .'">{{module}}</a></dd>
-                        {% else %}
-                        <dd><a href="/doc/index.php?module={{module}}">{{module}}</a></dd>
-                        {% endif%}
-                        {% endfor %}
-                    </dl>
-                </li>
-            </ul>
-        </div>
-        <div class="layui-side layui-bg-black">
-            <div class="layui-side-scroll">
-                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-                <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                    {% for class in classList %}
-                    <li class="layui-nav-item layui-nav-itemed">
-                        <a class="" href="javascript:;" onclick="showClassDesc('{{classDoc}}', this);">
-                            {{class.className}}
-                        </a>
-                        <dl class="layui-nav-child">
-                            {% for doc in class.docList %}
-                            {% if class.module == config.defaultModule and class.className == config.defaultClass and doc.method == config.defaultMethod %}
-                            <dd class='layui-this'><a
-                                    href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a>
-                            </dd>
-                            {% else %}
-                            <dd><a
-                                    href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a>
-                            </dd>
-                            {% endif %}
-                            {% endfor %}
-                        </dl>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-
+        <!-- 头部信息 -->
+        {% include 'unit/header.html' %}
+        <!-- 头部信息 -->
+        <!-- 右侧导航栏 -->
+        {% include 'unit/side.html' %}
+        <!-- 右侧导航栏 -->
         <div class="layui-body">
-            <button style="bottom: 100px;" type="button"
-                class="layui-btn layui-btn-danger layui-btn-radius layui-fixbar"
-                onclick="openRequestFrame();">请求测试</button>
             <!-- 内容主体区域 -->
             <div style="padding: 15px;">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>
+                        <h1>{{methodDoc.summary}}</h1>
+                    </legend>
+                </fieldset>
+
+                <blockquote class="layui-elem-quote">{{requestUrl}}</blockquote>
+
                 {% if methodDoc.description %}
-                <blockquote class="layui-elem-quote">说明: {{methodDoc.description}}</blockquote>
-                {% endif %}
-                <blockquote class="layui-elem-quote">标题: {{methodDoc.summary}}</blockquote>
-                <blockquote class="layui-elem-quote">请求链接: {{requestUrl}}</blockquote>
-
-                {% if methodDoc.params %}
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>请求参数</legend>
+                <fieldset class="layui-elem-field">
+                    <legend><h5>描述</h5></legend>
+                    <div class="layui-field-box">
+                        {{methodDoc.description}}
+                    </div>
                 </fieldset>
-                <div class="layui-form">
-                    <table class="layui-table">
-                        <thead>
-                            <tr>
-                                <th>参数名</th>
-                                <th>类型</th>
-                                <th>是否可选</th>
-                                <th>默认值</th>
-                                <th>说明</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for param in methodDoc.params %}
-                            <tr>
-                                <td>{{param['name']}}</td>
-                                <td>{{param['type']}}</td>
-                                <td>{{param['default']}}</td>
-                                <td>{{param['defaultValue']}}</td>
-                                <td>{{param['desc']}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
                 {% endif %}
 
-                {% if methodDoc.requestExample %}
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>请求示例</legend>
-                </fieldset>
-                <div class="layui-tab layui-tab-card">
+                <div class="layui-tab layui-tab-card" style="margin-top: 30px;">
                     <ul class="layui-tab-title">
-                        {% for key, example in methodDoc.requestExample %}
-                        <li {% if key == 0 %}class="layui-this" {% endif %}>{% if key == 0 %}默认{% else %}示例 -
-                            {{key}}{% endif %}</li>
-                        {% endfor %}
+                        <li class="layui-this">
+                            请求内容
+                        </li>
+                        <li>返回内容</li>
+                        <li>其他说明</li>
+                        <li>变更日志</li>
                     </ul>
                     <div class="layui-tab-content">
-                        {% for key, example in methodDoc.requestExample %}
-                        <div class="layui-tab-item {% if key == 0 %}layui-show{% endif %}">
-                            <input type="hidden" name="requestExample" value="{{example}}">
-                            <pre id="requestExampleValue{{key}}"></pre>
+                        <div class="layui-tab-item layui-show">
+                            <!-- 请求内容 -->
+                            {% include 'unit/requestExample.html' %}
+                            <!-- 请求内容 -->
                         </div>
-                        {% endfor %}
+                        <div class="layui-tab-item">
+                            <!-- 返回内容 -->
+                            {% include 'unit/returnExample.html' %}
+                            <!-- 返回内容 -->
+                        </div>
+                        <div class="layui-tab-item">
+                            <!-- 其他表格 -->
+                            {% include 'unit/table.html' %}
+                            <!-- 其他表格 -->
+                        </div>
+                        <div class="layui-tab-item">
+                            <!-- 变更日志 -->
+                            {% include 'unit/changeLog.html' %}
+                            <!-- 变更日志 -->
+                        </div>
                     </div>
                 </div>
-                {% endif %}
-
-                {% if methodDoc.resParams %}
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>返回字段说明</legend>
-                </fieldset>
-                <div class="layui-form">
-                    <table class="layui-table">
-                        <thead>
-                            <tr>
-                                <th>参数名</th>
-                                <th>类型</th>
-                                <th>说明</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for param in methodDoc.resParams %}
-                            <tr>
-                                <td>{{param['name']}}</td>
-                                <td>{{param['type']}}</td>
-                                <td>{{param['desc']}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% endif %}
-
-                {% if methodDoc.returnExample %}
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>返回示例</legend>
-                </fieldset>
-                <div class="layui-tab layui-tab-card">
-                    <ul class="layui-tab-title">
-                        {% for key, example in methodDoc.returnExample %}
-                        <li {% if key == 0 %}class="layui-this" {% endif %}>{% if key == 0 %}默认{% else %}示例 -
-                            {{key}}{% endif %}</li>
-                        {% endfor %}
-                    </ul>
-                    <div class="layui-tab-content">
-                        {% for key, example in methodDoc.returnExample %}
-                        <div class="layui-tab-item {% if key == 0 %}layui-show{% endif %}">
-                            <input type="hidden" name="returnExample" value="{{example}}">
-                            <pre id="returnExampleValue{{key}}"></pre>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-
-                {% if methodDoc.table %}
-                {% for table in methodDoc.table %}
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>{{table.title}}</legend>
-                </fieldset>
-                <div class="layui-form">
-                    <table class="layui-table">
-                        <thead>
-                            <tr>
-                                {% for th in table.thead %}
-                                <th>{{th}}</th>
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for tdArr in table.body %}
-                            <tr>
-                                {% for td in tdArr %}
-                                <td>{{td}}</td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% endfor %}
-                {% endif %}
 
                 {% if methodDoc.link %}
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>参考链接</legend>
+                    <legend><h5>参考链接</h5></legend>
                 </fieldset>
                 {% for link in methodDoc.link %}
                 <blockquote class="layui-elem-quote"><a href="{{link}}" target="_blank">{{link}}</a></blockquote>
                 {% endfor %}
                 {% endif %}
 
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-                    <legend>接口发展时间线</legend>
-                </fieldset>
-                <ul class="layui-timeline">
-                    {% for log in methodDoc.changeLog %}
-                    <li class="layui-timeline-item">
-                        <i class="layui-icon layui-timeline-axis"></i>
-                        <div class="layui-timeline-content layui-text">
-                            <h3 class="layui-timeline-title">{{log.event}}</h3>
-                            <p>{{log.time}} &nbsp;&nbsp;||&nbsp;&nbsp; {{log.author}}</p>
-                        </div>
-                    </li>
-                    {% endfor %}
-                    <li class="layui-timeline-item">
-                        <i class="layui-icon layui-timeline-axis"></i>
-                        <div class="layui-timeline-content layui-text">
-                            <h3 class="layui-timeline-title">创建接口</h3>
-                            <p>{{methodDoc.since}} &nbsp;&nbsp;||&nbsp;&nbsp; {{methodDoc.author}}</p>
-                        </div>
-                    </li>
-                </ul>
-
                 <div id="formContent" style="display:none;">
-                    {% include 'request.html' %}
+                    <!-- 请求测试 -->
+                    {% include 'unit/request.html' %}
+                    <!-- 请求测试 -->
                 </div>
             </div>
         </div>
-
-        <div class="layui-footer" style="align-content: center;">
-            <a href="https://github.com/sunanzhi/annotatedDoc" target="_blank" rel="nofollow">© MorsTiin Doc MIT License
-                &nbsp;&nbsp;||&nbsp;&nbsp; GitHub</a>
-            <a style="float: right;" href="http://www.miitbeian.gov.cn/" target="_blank"
-                rel="nofollow">{{config.miitbeian}}</a>
-        </div>
+        <!-- 底部信息 -->
+        {% include 'unit/footer.html' %}
+        <!-- 底部信息 -->
     </div>
     <input type="hidden" value="{{methodDoc['example']['requestExample']}}" id="requestExampleVal">
     <input type="hidden" value="{{methodDoc['example']['returnExample']}}" id="returnExampleVal">
@@ -306,7 +153,7 @@
             // 表单提交
             form.on('submit(confirm)', function (data) {
                 $("#submitBtn").attr('disabled', true);
-                var loadingLayer = layer.load(1, {
+                var loadingLayer = layer.load(3, {
                     shade: [0.1, '#fff'] //0.1透明度的白色背景
                 });
                 var fields = $(data.form).serializeArray();
@@ -362,9 +209,11 @@
                                 shadeClose: true, //开启遮罩关闭
                                 content: '<pre>' + syntaxHighlight(JSON.stringify(res)) + '</pre>'
                             });
+                            layer.close(loadingLayer);
                         }
                     });
                 } catch (error) {
+                    layer.close(loadingLayer);
                     console.log(JSON.stringify(error))
                     layer.open({
                         type: 1,
@@ -376,7 +225,6 @@
                         content: JSON.stringify(error)
                     });
                 }
-                layer.close(loadingLayer);
                 $("#submitBtn").removeAttr('disabled');
 
                 return false;
