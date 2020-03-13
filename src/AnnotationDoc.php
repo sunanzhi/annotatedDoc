@@ -96,6 +96,13 @@ class AnnotationDoc
     private $changeLog = [];
 
     /**
+     * 请求方式
+     *
+     * @var array
+     */
+    private $method = ['POST', 'GET'];
+
+    /**
      * 处理类文档内容
      * 
      * @param ReflectionClass $class 类
@@ -150,6 +157,7 @@ class AnnotationDoc
         return [
             'summary' => $summary,
             'description' => $description,
+            'method' => $this->method,
             'requestUrl' => $this->requestUrl,
             'params' => $this->params,
             'resParams' => $this->resParams,
@@ -332,5 +340,82 @@ class AnnotationDoc
             'time' => $tag->getTime(),
             'event' => $tag->getEvent()
         ];
+    }
+
+    /**
+     * post请求
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handlePost(BaseTag $tag)
+    {
+        $this->method[] = 'POST';
+    }
+
+    /**
+     * get请求
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handleGet(BaseTag $tag)
+    {
+        $this->method[] = 'GET';
+    }
+
+    /**
+     * put请求
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handlePut(BaseTag $tag)
+    {
+        $this->method[] = 'PUT';
+    }
+
+    /**
+     * delete请求
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handleDelete(BaseTag $tag)
+    {
+        $this->method[] = 'DELETE';
+    }
+
+    /**
+     * options请求
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handleOptions(BaseTag $tag)
+    {
+        $this->method[] = 'OPTIONS';
+    }
+
+    /**
+     * trace请求
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handleTrace(BaseTag $tag)
+    {
+        $this->method[] = 'TRACE';
+    }
+
+    /**
+     * connect请求
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handleConnect(BaseTag $tag)
+    {
+        $this->method[] = 'CONNECT';
     }
 }

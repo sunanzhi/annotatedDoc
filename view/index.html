@@ -49,7 +49,12 @@
             <div style="padding: 15px;">
                 <fieldset class="layui-elem-field layui-field-title">
                     <legend>
-                        <h1>{{methodDoc.summary}}</h1>
+                        <h1>
+                            {{methodDoc.summary}}
+                            {% for method in methodDoc.method %}
+                            <span class="layui-badge layui-bg-orange" style="bottom: 10px;">{{method}}</span>
+                            {% endfor %}
+                        </h1>
                     </legend>
                 </fieldset>
 

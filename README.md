@@ -248,6 +248,9 @@ changeLog | 变更记录 | 否
  * 
  * @requestUrl 我是请求链接，可以不用填写
  * 
+ * @post
+ * @get
+ * 
  * @table 我是表格标题
  * 表头 | 表头 
  * key1 | value1
