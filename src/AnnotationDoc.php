@@ -100,7 +100,7 @@ class AnnotationDoc
      *
      * @var array
      */
-    private $method = ['POST', 'GET'];
+    private $method = ['POST'];
 
     /**
      * 处理类文档内容

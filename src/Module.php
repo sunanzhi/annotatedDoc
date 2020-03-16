@@ -54,7 +54,7 @@ class Module
                         if (in_array($method->name, ['__construct'])) {
                             continue;
                         }
-                        if ($method->name == $config->defaultMethod) {
+                        if ($method->name == $config->defaultMethod && $className == $config->defaultClass) {
                             $requestUrl = '/' . strtolower($module['name']) . '/' . $config->defaultClass . '/' . $config->defaultMethod;
                             $methodDoc = (new AnnotationDoc())->handleMethodComment($method);
                         }
