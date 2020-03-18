@@ -55,7 +55,7 @@ final class ChangeLog extends BaseTag implements StaticMethod
         }
 
         $author = $content['author'] ?? '';
-        $time = empty($content['time']) ? '' : date('Y-m-d H:i:s', strtotime($content['time'])) ?? '';
+        $time = empty($content['time']) ? '' : date('Y.m.d H:i:s', strtotime(str_replace('.', '-', $content['time']))) ?? '';
         $event = $content['event'] ?? '';
 
         return new static($author, $time, $event, $description);
