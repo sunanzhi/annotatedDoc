@@ -66,6 +66,7 @@ class Module
                     $classList[] = [
                         'module' => $module['name'],
                         'className' => $className,
+                        'classDoc' => $classDoc, // 类说明
                         'docList' => $docList,
                     ];
                 }
@@ -76,7 +77,6 @@ class Module
             'classList' => $classList, // 类列表
             'requestUrl' => empty($methodDoc['requestUrl']) ? $requestUrl : $methodDoc['requestUrl'], // 请求url
             'availableModule' => $availableModule, // 可用模块
-            'classDoc' => $classDoc, // 当前类文档说明
             'methodDoc' => $methodDoc, // 当前方法文档 
         ];
     }
