@@ -51,6 +51,13 @@
                     <legend>
                         <h1>
                             {{methodDoc.summary}}
+                            {% if methodDoc.guest %} 
+                            <span class="layui-badge layui-bg-blue" style="bottom: 10px;">游客模式</span> 
+                            {% else %} 
+                            <span class="layui-badge layui-bg-red" style="bottom: 10px;">用户模式</span> 
+                             
+                            {% endif %}
+                            
                             {% for method in methodDoc.method %}
                             <span class="layui-badge layui-bg-orange" style="bottom: 10px;">{{method}}</span>
                             {% endfor %}

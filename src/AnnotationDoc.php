@@ -103,6 +103,13 @@ class AnnotationDoc
     private $method = ['POST'];
 
     /**
+     * 游客 true:游客可以访问 false:需要登陆
+     *
+     * @var boolean
+     */
+    private $guest = false;
+
+    /**
      * 处理类文档内容
      * 
      * @param ReflectionClass $class 类
@@ -168,6 +175,7 @@ class AnnotationDoc
             'changeLog' => $this->changeLog,
             'requestExample' => $this->requestExample,
             'returnExample' => $this->returnExample,
+            'guest' => $this->guest,
         ];
     }
 
@@ -417,5 +425,16 @@ class AnnotationDoc
     private function handleConnect(BaseTag $tag)
     {
         $this->method[] = 'CONNECT';
+    }
+
+    /**
+     * 游客可以访问
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handleGuest(BaseTag $tag)
+    {
+        $this->guest = true;
     }
 }

@@ -86,7 +86,24 @@ class Config
      * @var array
      */
     public $availableTags = [
-        'post', 'get', 'put', 'delete', 'options', 'trace', 'connect', 'param', 'resParam', 'author', 'since', 'link', 'requestExample', 'returnExample', 'requestUrl', 'table', 'changeLog'
+        'post', 
+        'get', 
+        'put', 
+        'delete', 
+        'options', 
+        'trace', 
+        'connect', 
+        'param', 
+        'resParam', 
+        'author', 
+        'since', 
+        'link', 
+        'requestExample', 
+        'returnExample', 
+        'requestUrl', 
+        'table', 
+        'changeLog',
+        'guest'
     ];
 
     private $extraTags = [
