@@ -150,6 +150,9 @@ class AnnotationDoc
         $this->handleMethodParameters($method);
         // 文档内容
         $docComment = $method->getDocComment();
+        if(empty($docComment)){
+            return [];
+        }
         $factory  = DocBlockFactory::createInstance(Config::getInstance()->getExtraTags());
         $docblock = $factory->create($docComment);
         // 标题
