@@ -103,7 +103,8 @@ class Config
         'requestUrl', 
         'table', 
         'changeLog',
-        'guest'
+        'guest',
+        'rank',
     ];
 
     private $extraTags = [

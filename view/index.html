@@ -51,6 +51,9 @@
                     <legend>
                         <h1>
                             {{methodDoc.summary}}
+                            {% if methodDoc.rank %}
+                            <span class="layui-badge layui-bg-cyan" style="bottom: 10px;">管理员</span> 
+                            {% endif %}
                             {% if methodDoc.guest %} 
                             <span class="layui-badge layui-bg-blue" style="bottom: 10px;">游客模式</span> 
                             {% else %} 

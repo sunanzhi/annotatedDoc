@@ -110,6 +110,13 @@ class AnnotationDoc
     private $guest = false;
 
     /**
+     * 权限 true:需要权限 false:不需要权限
+     *
+     * @var boolean
+     */
+    private $rank = false;
+
+    /**
      * 处理类文档内容
      * 
      * @param ReflectionClass $class 类
@@ -176,6 +183,7 @@ class AnnotationDoc
             'requestExample' => $this->requestExample,
             'returnExample' => $this->returnExample,
             'guest' => $this->guest,
+            'rank' => $this->rank,
         ];
     }
 
@@ -436,5 +444,16 @@ class AnnotationDoc
     private function handleGuest(BaseTag $tag)
     {
         $this->guest = true;
+    }
+
+    /**
+     * 权限
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handleRank(BaseTag $tag)
+    {
+        $this->rank = true;
     }
 }
