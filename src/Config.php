@@ -107,6 +107,13 @@ class Config
         'rank',
     ];
 
+    /**
+     * 左边菜单宽度
+     *
+     * @var string
+     */
+    public $leftPadding = '200px';
+
     private $extraTags = [
         'resParam' => ResParam::class, 
         'changeLog' => ChangeLog::class
