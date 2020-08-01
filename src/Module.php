@@ -36,7 +36,11 @@ class Module
                 // 遍历类
                 $classFileList = scandir("{$module['path']}");
                 foreach ($classFileList as $classFileName) {
-                    if (in_array($classFileName, $config->forbiddenLevel)) {
+                    if (in_array($classFileName, $config->forbiddenLevel) || is_dir($classFileName)) {
+                        continue;
+                    }
+                    // 如果非php文件则忽略
+                    if(strpos($classFileName, '.php') === false) {
                         continue;
                     }
                     $className = substr($classFileName, 0, -4);
@@ -54,7 +58,10 @@ class Module
                         if (in_array($method->name, ['__construct'])) {
                             continue;
                         }
-                        if ($method->name == $config->defaultMethod && $className == $config->defaultClass) {
+                        if(empty($method->getReturnType())){
+                            continue;
+                        }
+                        if ($method->name == $config->defaultMethod) {
                             $requestUrl = '/' . strtolower($module['name']) . '/' . $config->defaultClass . '/' . $config->defaultMethod;
                             $methodDoc = (new AnnotationDoc())->handleMethodComment($method);
                         }
@@ -66,7 +73,6 @@ class Module
                     $classList[] = [
                         'module' => $module['name'],
                         'className' => $className,
-                        'classDoc' => $classDoc, // 类说明
                         'docList' => $docList,
                     ];
                 }
@@ -77,6 +83,7 @@ class Module
             'classList' => $classList, // 类列表
             'requestUrl' => empty($methodDoc['requestUrl']) ? $requestUrl : $methodDoc['requestUrl'], // 请求url
             'availableModule' => $availableModule, // 可用模块
+            'classDoc' => $classDoc, // 当前类文档说明
             'methodDoc' => $methodDoc, // 当前方法文档 
         ];
     }
