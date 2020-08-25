@@ -55,7 +55,8 @@ class Module
                     $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
                     $docList = [];
                     foreach ($methods as $method) {
-                        if (in_array($method->name, ['__construct'])) {
+                        // 过滤父类方法
+                        if (in_array($method->name, ['__construct']) || $method->class != "{$module['namespace']}\\{$className}") {
                             continue;
                         }
                         if(empty($method->getReturnType())){
