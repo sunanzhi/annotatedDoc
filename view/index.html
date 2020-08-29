@@ -225,6 +225,10 @@
                                 content: '<pre>' + syntaxHighlight(JSON.stringify(res)) + '</pre>'
                             });
                             layer.close(loadingLayer);
+                        },
+                        error: function(res) {
+                            layer.close(loadingLayer);
+                            layer.msg(res.responseText)
                         }
                     });
                 } catch (error) {
