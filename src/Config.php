@@ -114,6 +114,13 @@ class Config
      */
     public $leftPadding = '200px';
 
+    /**
+     * 规范链接
+     *
+     * @var string
+     */
+    public $docSpecificationUrl = '';
+
     private $extraTags = [
         'resParam' => ResParam::class, 
         'changeLog' => ChangeLog::class
