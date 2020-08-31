@@ -59,30 +59,74 @@
     <script>
         // https://www.layui.com/demo/layuiAdmin.html 后台模版示例文档
         //JavaScript代码区域
+        // 自动添加全局header
+        var checkLocalStorageHK = localStorage.getItem('globalHeaderKey')
+        var checkLocalStorageHV = localStorage.getItem('globalHeaderValue')
+        if (checkLocalStorageHK && checkLocalStorageHV) {
+            var localHeaderKeys = JSON.parse(checkLocalStorageHK);
+            var localHeaderValues = JSON.parse(checkLocalStorageHV);
+            if(localHeaderKeys) {
+                localHeaderKeys.forEach(function(value, key) {
+                    
+                    addHeaderSection($("#requestForm"), value, localHeaderValues[key])
+                    addHeaderSection($("#settingHeaderForm"), value, localHeaderValues[key])
+                });
+            }
+        }
+
+        function addHeaderSection(obj, key, value) {
+            obj.find("#headerSeparator").before(
+                '<div class="layui-form-item">' +
+                '<div class="layui-inline">' +
+                '<label class="layui-form-label">key</label>' +
+                '<div class="layui-input-inline">' +
+                '<input type="text" placeholder="Authorization" name="headerKey[]" autocomplete="off" class="layui-input" value="' + key + '">' +
+                '</div>' +
+                '</div>' +
+                '<div class="layui-inline">' +
+                '<label class="layui-form-label">value</label>' +
+                '<div class="layui-input-inline">' +
+                '<input type="text" placeholder="This is token value" name="headerValue[]" autocomplete="off" class="layui-input" value="' + value + '">' +
+                '</div>' +
+                '</div>' +
+                '</div>'
+            );
+        }
+
         layui.use('element', function () {
             var element = layui.element;
         });
         layui.use(['form', 'layer'], function () {
             var form = layui.form;
-
             // 新增header内容
             form.on('submit(addHeaderSection)', function (data) {
-                $(data.form).find("#headerSeparator").before(
-                    '<div class="layui-form-item">' +
-                    '<div class="layui-inline">' +
-                    '<label class="layui-form-label">key</label>' +
-                    '<div class="layui-input-inline">' +
-                    '<input type="text" placeholder="Authorization" name="headerKey[]" autocomplete="off" class="layui-input">' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="layui-inline">' +
-                    '<label class="layui-form-label">value</label>' +
-                    '<div class="layui-input-inline">' +
-                    '<input type="text" placeholder="This is token value" name="headerValue[]" autocomplete="off" class="layui-input">' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>'
-                );
+                addHeaderSection($(data.form), '', '')
+                return false;
+            });
+            // 全局头设置
+            form.on('submit(settingHeaderBtn)', function(data) {
+                var fields = $(data.form).serializeArray();
+                var length = fields.length;
+                var headerKey = new Array();
+                var headerValue = new Array();
+                for (i = 0; i < length; i++) {
+                    if(fields[i]['name'].indexOf("headerKey") != -1) {
+                        if(fields[i]['value'] != ''){
+                            headerKey.push(fields[i]['value']);
+                        }
+                    } else if (fields[i]['name'].indexOf("headerValue") != -1) {
+                        if(fields[i]['value'] != ''){
+                            headerValue.push(fields[i]['value']);
+                        }
+                    }
+                }
+                localStorage.setItem('globalHeaderKey', JSON.stringify(headerKey));
+                localStorage.setItem('globalHeaderValue', JSON.stringify(headerValue));
+                layer.msg('设置成功');
+                setTimeout(function() {
+                    location.reload();
+                }, 2000)
+
                 return false;
             });
             // 表单提交
@@ -92,6 +136,7 @@
                     shade: [0.1, '#fff'] //0.1透明度的白色背景
                 });
                 var fields = $(data.form).serializeArray();
+                console.log(fields)
                 var length = fields.length;
                 var requestUrl;
                 var requestBody;
@@ -99,22 +144,16 @@
                 var headerKey = new Array();
                 var headerValue = new Array();
                 for (i = 0; i < length; i++) {
-                    switch (fields[i]['name']) {
-                        case 'requestUrl':
-                            requestUrl = fields[i]['value'];
-                            break;
-                        case 'headerKey[0]':
-                            headerKey.push(fields[i]['value']);
-                            break;
-                        case 'headerValue[0]':
-                            headerValue.push(fields[i]['value']);
-                            break;
-                        case 'method':
-                            method = fields[i]['value'];
-                            break;
-                        case 'requestBody':
-                            requestBody = fields[i]['value'];
-                            break;
+                    if(fields[i]['name'] == 'requestUrl') {
+                        requestUrl = fields[i]['value'];
+                    } else if(fields[i]['name'] == 'method') {
+                        method = fields[i]['value'];
+                    } else if(fields[i]['name'] == 'requestBody') {
+                        requestBody = fields[i]['value'];
+                    } else if(fields[i]['name'].indexOf('headerKey') != -1 && fields[i]['value'] != '') {
+                        headerKey.push(fields[i]['value']);
+                    } else if(fields[i]['name'].indexOf('headerValue') != -1 && fields[i]['value'] != '') {
+                        headerValue.push(fields[i]['value']);
                     }
                 }
                 var header = {};
@@ -240,6 +279,16 @@
                 area: ['70%', '80%'], //宽高
                 content: url
             })
+        }
+
+        function openGlobalRequest() {
+            layer.open({
+                type: 1,
+                title: "全局请求头",
+                skin: 'layui-layer-rim', //加上边框
+                area: ['60%', '70%'], //宽高
+                content: $("#headerFormContent").html()
+            });
         }
     </script>
 </body>
