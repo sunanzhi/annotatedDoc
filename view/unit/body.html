@@ -4,13 +4,15 @@
             <h1>
                 {{methodDoc.summary}}
                 {% if methodDoc.rank %}
-                <span class="layui-badge layui-bg-cyan" style="bottom: 10px;">管理员</span> 
+                <span class="layui-badge layui-bg-cyan" style="bottom: 10px;">需要权限</span> 
                 {% endif %}
                 {% if methodDoc.guest %} 
                 <span class="layui-badge layui-bg-blue" style="bottom: 10px;">游客模式</span> 
                 {% else %} 
                 <span class="layui-badge layui-bg-red" style="bottom: 10px;">用户模式</span> 
-                 
+                {% endif %}
+                {% if methodDoc.cache %} 
+                <span class="layui-badge layui-bg-green" style="bottom: 10px;">缓存 {{methodDoc.cache}}秒</span> 
                 {% endif %}
                 
                 {% for method in methodDoc.method %}
@@ -27,6 +29,14 @@
         <legend><h5>描述</h5></legend>
         <div class="layui-field-box">
             <pre>{{methodDoc.description}}</pre>
+        </div>
+    </fieldset>
+    {% endif %}
+    {% if methodDoc.rank %}
+    <fieldset class="layui-elem-field">
+        <legend><h5>权限项</h5></legend>
+        <div class="layui-field-box">
+            <pre>{{methodDoc.rank}}</pre>
         </div>
     </fieldset>
     {% endif %}

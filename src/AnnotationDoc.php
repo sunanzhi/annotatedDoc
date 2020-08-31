@@ -117,6 +117,13 @@ class AnnotationDoc
     private $rank = false;
 
     /**
+     * 缓存时间
+     *
+     * @var integer
+     */
+    private $cache = 0;
+
+    /**
      * 处理类文档内容
      * 
      * @param ReflectionClass $class 类
@@ -187,6 +194,7 @@ class AnnotationDoc
             'returnExample' => $this->returnExample,
             'guest' => $this->guest,
             'rank' => $this->rank,
+            'cache' => $this->cache,
         ];
     }
 
@@ -457,6 +465,17 @@ class AnnotationDoc
      */
     private function handleRank(BaseTag $tag)
     {
-        $this->rank = true;
+        $this->rank = $tag->getDescription()->__toString();
+    }
+
+    /**
+     * 缓存
+     *
+     * @param BaseTag $tag
+     * @return void
+     */
+    private function handleCache(BaseTag $tag)
+    {
+        $this->cache = $tag->getDescription()->__toString();
     }
 }

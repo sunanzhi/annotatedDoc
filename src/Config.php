@@ -105,6 +105,7 @@ class Config
         'changeLog',
         'guest',
         'rank',
+        'cache',
     ];
 
     /**
