@@ -75,12 +75,13 @@ class Module
                         'module' => $module['name'],
                         'className' => $className,
                         'docList' => $docList,
+                        'classDoc' => $classDoc
                     ];
                 }
             }
         }
         // 处理requestUrl
-        $handleRequestUrl = function() use ($requestUrl, $methodDoc, $config){
+        $requestUrl = call_user_func(function() use ($requestUrl, $methodDoc, $config){
             if(empty($methodDoc['requestUrl'])) {
                 // 方法没有设置请求url
                 if($config->requestUrlCallback === null) {
@@ -91,14 +92,13 @@ class Module
             } else {
                 return $methodDoc['requestUrl'];
             }
-        };
-        $requestUrl = $handleRequestUrl();
+        });
+        
         return [
             'config' => $config, // 配置文件
             'classList' => $classList, // 类列表
             'requestUrl' => $requestUrl, // 请求url
             'availableModule' => $availableModule, // 可用模块
-            'classDoc' => $classDoc, // 当前类文档说明
             'methodDoc' => $methodDoc, // 当前方法文档 
         ];
     }
