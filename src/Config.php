@@ -1,6 +1,7 @@
 <?php
 namespace MorsTiin\AnnotatedDoc;
 
+use Closure;
 use MorsTiin\AnnotatedDoc\Tags\ChangeLog;
 use MorsTiin\AnnotatedDoc\Tags\ResParam;
 
@@ -68,6 +69,13 @@ class Config
      * @var string
      */
     public $miitbeian = '';
+
+    /**
+     * 处理 requestUrl 回调
+     *
+     * @var Closure 
+     */
+    public $requestUrlCallback = null;
 
     /**
      * 静态样式url
@@ -146,6 +154,18 @@ class Config
     public function getExtraTags()
     {
         return $this->extraTags;
+    }
+
+    /**
+     * 处理请求url
+     *
+     * @param string $requestUrl 系统通过路径生成
+     * @param Closure $callback 回调
+     * @return string
+     */
+    public function handleRequestUrl(string $requestUrl, Closure $callback)
+    {
+        return $callback($requestUrl);
     }
 
     /**

@@ -79,10 +79,24 @@ class Module
                 }
             }
         }
+        // 处理requestUrl
+        $handleRequestUrl = function() use ($requestUrl, $methodDoc, $config){
+            if(empty($methodDoc['requestUrl'])) {
+                // 方法没有设置请求url
+                if($config->requestUrlCallback === null) {
+                    return $requestUrl;
+                } else {
+                    return $config->handleRequestUrl($requestUrl, $config->requestUrlCallback);
+                }
+            } else {
+                return $methodDoc['requestUrl'];
+            }
+        };
+        $requestUrl = $handleRequestUrl();
         return [
             'config' => $config, // 配置文件
             'classList' => $classList, // 类列表
-            'requestUrl' => empty($methodDoc['requestUrl']) ? $requestUrl : $methodDoc['requestUrl'], // 请求url
+            'requestUrl' => $requestUrl, // 请求url
             'availableModule' => $availableModule, // 可用模块
             'classDoc' => $classDoc, // 当前类文档说明
             'methodDoc' => $methodDoc, // 当前方法文档 
