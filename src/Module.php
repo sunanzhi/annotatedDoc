@@ -87,7 +87,7 @@ class Module
                 if($config->requestUrlCallback === null) {
                     return $requestUrl;
                 } else {
-                    return $config->handleRequestUrl($requestUrl, $config->requestUrlCallback);
+                    return $config->handleRequestUrl($requestUrl ?? '', $config->requestUrlCallback);
                 }
             } else {
                 return $methodDoc['requestUrl'];
