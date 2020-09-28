@@ -3,8 +3,10 @@
         <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
         <ul class="layui-nav layui-nav-tree" lay-filter="test" style="width: {{ config.leftPadding }};">
             {% for class in classList %}
-            <li class="layui-nav-item {% if class.className == config.defaultClass %} layui-nav-itemed {% endif %}" style="width: {{ config.leftPadding }};">
-                <a class="" href="javascript:;" onclick="showClassDesc('{{class.classDoc}}', this);">
+            <li class="layui-nav-item {% if class.className == config.defaultClass %} layui-nav-itemed {% endif %}"
+                style="width: {{ config.leftPadding }};">
+                <a class="" href="javascript:;" onclick="showClassDesc('{{class.classDoc}}', this);" 
+                    style="{% if class.className == config.defaultClass %} background-color: purple; {% endif %}">
                     {{class.className}}
                 </a>
                 <dl class="layui-nav-child">
