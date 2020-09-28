@@ -62,7 +62,7 @@ class Module
                         if(empty($method->getReturnType())){
                             continue;
                         }
-                        if ($method->name == $config->defaultMethod) {
+                        if ($method->name == $config->defaultMethod && $config->defaultClass == $class->getShortName()) {
                             $requestUrl = '/' . strtolower($module['name']) . '/' . $config->defaultClass . '/' . $config->defaultMethod;
                             $methodDoc = (new AnnotationDoc())->handleMethodComment($method);
                         }
