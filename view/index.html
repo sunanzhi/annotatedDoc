@@ -187,7 +187,11 @@
                         },
                         error: function(res) {
                             layer.close(loadingLayer);
-                            layer.msg(res.responseText)
+                            layer.alert(res.responseText, {
+                                title: '提示',
+                                skin: 'layui-layer-molv' //样式类名
+                                ,closeBtn: 0
+                            })
                         }
                     });
                 } catch (error) {
