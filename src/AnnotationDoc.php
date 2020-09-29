@@ -129,11 +129,11 @@ class AnnotationDoc
      * @param ReflectionClass $class 类
      * @return string
      */
-    public static function handleClassComment(ReflectionClass $class): string
+    public static function handleClassComment(ReflectionClass $class): array
     {
         $docComment = $class->getDocComment();
         if($docComment === false) {
-            return '';
+            return [];
         }
         $factory  = DocBlockFactory::createInstance(Config::getInstance()->getExtraTags());
         $docblock = $factory->create($docComment);
@@ -142,7 +142,31 @@ class AnnotationDoc
         // 描述
         $description = $docblock->getDescription()->render();
 
-        return $summary.' '.$description;
+        return [
+            'summary' => $summary,
+            'description' => $description
+        ];
+    }
+
+    /**
+     * 处理方法概要
+     *
+     * @param ReflectionMethod $method 方法
+     * @return array
+     */
+    public static function handleMethodSummary(ReflectionMethod $method): string
+    {
+        // 文档内容
+        $docComment = $method->getDocComment();
+        if(empty($docComment)){
+            return '';
+        }
+        $factory  = DocBlockFactory::createInstance();
+        $docblock = $factory->create($docComment);
+        // 标题
+        $summary = $docblock->getSummary();
+
+        return $summary;
     }
 
     /**

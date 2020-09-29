@@ -28,6 +28,9 @@ class Module
     public function getDoc(): array
     {
         $config = Config::getInstance();
+        $requestUrl = '';
+        $methodDoc = [];
+        $classList = [];
         // 遍历模块
         foreach ($config->moduleList as $module) {
             // 有效模块
@@ -62,6 +65,7 @@ class Module
                         if(empty($method->getReturnType())){
                             continue;
                         }
+                        $methodSummary = AnnotationDoc::handleMethodSummary($method);
                         if ($method->name == $config->defaultMethod && $config->defaultClass == $class->getShortName()) {
                             $requestUrl = '/' . strtolower($module['name']) . '/' . $config->defaultClass . '/' . $config->defaultMethod;
                             $methodDoc = (new AnnotationDoc())->handleMethodComment($method);
@@ -69,13 +73,14 @@ class Module
                         // 处理文档
                         $docList[] = [
                             'method' => $method->name,
+                            'methodSummary' => $methodSummary
                         ];
                     }
                     $classList[] = [
                         'module' => $module['name'],
                         'className' => $className,
                         'docList' => $docList,
-                        'classDoc' => $classDoc
+                        'classDoc' => isset($classDoc['summary']) ? $classDoc['summary'] : ''
                     ];
                 }
             }

@@ -5,21 +5,23 @@
             {% for class in classList %}
             <li class="layui-nav-item {% if class.className == config.defaultClass %} layui-nav-itemed {% endif %}"
                 style="width: {{ config.leftPadding }};">
-                <a class="" href="javascript:;" onclick="showClassDesc('{{class.classDoc}}', this);" 
+                <a class="" href="javascript:;" onclick="showClassDesc('{{class.classDoc}}', this);"
                     style="{% if class.className == config.defaultClass %} background-color: #0096888c; {% endif %}">
                     {{class.className}}
                 </a>
                 <dl class="layui-nav-child">
                     {% for doc in class.docList %}
-                    {% if class.module == config.defaultModule and class.className == config.defaultClass and doc.method == config.defaultMethod %}
-                    <dd class='layui-this'><a
-                            href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a>
+                    <dd {% if class.module == config.defaultModule and class.className == config.defaultClass and doc.method == config.defaultMethod %}
+                        class='layui-this' {% endif %}>
+                        <a
+                            href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>
+                            {% if config.switchMethod %}
+                            {{doc.methodSummary}}
+                            {% else %}
+                            {{doc.method}}
+                            {% endif %}
+                        </a>
                     </dd>
-                    {% else %}
-                    <dd><a
-                            href='/doc/index.php?module={{class.module}}&class={{class.className}}&method={{doc.method}}'>{{doc.method}}</a>
-                    </dd>
-                    {% endif %}
                     {% endfor %}
                 </dl>
             </li>

@@ -130,6 +130,13 @@ class Config
      */
     public $docSpecificationUrl = '';
 
+    /**
+     * 切换方法名显示 名称/概要 false=显示方法名称 true=显示方法概要
+     *
+     * @var boolean
+     */
+    public $switchMethod = false;
+
     private $extraTags = [
         'resParam' => ResParam::class, 
         'changeLog' => ChangeLog::class
