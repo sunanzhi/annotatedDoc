@@ -488,7 +488,7 @@ class AnnotationDoc
      */
     private function handleRank(BaseTag $tag)
     {
-        $this->rank = $tag->getDescription()->__toString();
+        $this->rank = true;
     }
 
     /**
