@@ -27,10 +27,38 @@ use MorsTiin\AnnotatedDoc\Template;
 
 // 单例配置获取
 $config = Config::getInstance();
-// 模块信息配置
+// 接口列表左边菜单宽度，可能有些接口命名很长，因此左边宽度做了可调整
+$config->leftPadding = '300px';
+// 文档标题啊
+$config->title = 'API管理文档';
+// 考虑到有些项目可能需要一些全局描述性，例如 状态码/请求的规则 等，这里的html文件跟当前文件同级即可
+$config->docSpecificationUrl = '/doc/desc.html';
+// 文档列表显示 方法名/显示方法描述
+$config->switchMethod = true;
+// 考虑到每个项目架构不同，因此 requestUrl 可能不一定是目录形式组成，所以提供一个回调函数进行 requestUrl 修改
+// 具体实现请自行处理，这里只是展示 requestUrlCallBack 使用方式
+$config->requestUrlCallback = function(string $requestUrl) {
+    $urlArr = explode('/', $requestUrl);
+    $res = '';
+    foreach($urlArr as $v) {
+        if(empty($v)) {
+            continue;
+        }
+        if(strpos($v, 'Controller') !== false) {
+            $v = strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . '-' . "$2", str_replace('Controller', '', $v)));
+        } else if(strpos($v, 'action') !== false) {
+            $v = strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . '-' . "$2", str_replace('action', '', $v)));
+        }
+
+        $res .= '/'.$v;
+    }
+
+    return $res;
+};
+// 模块信息配置 请根据自己要显示的文档路径文件填写，命名空间一定要填写正确
 $config->moduleList = [
-    ['path' => __DIR__.'/../../app/example/api', 'namespace' => 'app\\example\\api', 'name' => 'example'],
-    ['path' => __DIR__.'/../../app/makeup/api', 'namespace' => 'app\\makeup\\api', 'name' => 'makeup'],
+    ['path' => __DIR__.'/../../controllers/api', 'namespace' => 'app\\controllers\\api', 'name' => 'api'],
+    ['path' => __DIR__.'/../../controllers/admin', 'namespace' => 'app\\controllers\\admin', 'name' => 'admin'],
 ];
 
 echo (new Template())->show();
@@ -53,7 +81,7 @@ defaultModule | string | 默认模块 例：`example`
 defaultClass | string | 默认类
 defaultMethod | string | 默认方法
 moduleList | array | 模块列表
-moduleList.path | string | 模块的绝对路径 例：`/Users/MorsTiin/sites/projects/annotatedDoc/app/example/api`
+moduleList.path | string | 模块的绝对路径 例：`/Users/MorsTiin/sites/annotatedDoc/app/example/api`
 moduleList.namespace | string | 模块下接口的命名空间 例：`app\\example\\api`
 moduleList.name | string | 模块名 例：`example`
 staticUrl | array | 样式链接，考虑到使用者可能用自己项目的layui/jq 
@@ -78,7 +106,8 @@ table | 表格 | 是
 author | 作者 | 否
 since | 创建时间 | 否
 link | 引用链接 | 是
-changeLog | 变更记录 | 否
+changeLog | 变更记录 | 是
+rank | 权限 | 否
 
 ### 注解tag
 
@@ -116,7 +145,7 @@ changeLog | 变更记录 | 否
 
 **使用方式**
 
-**注意：如果不填写默认按照 `模块/类名/方法` 方式显示**
+**注意：如果不填写默认按照 `模块/类名/方法` 方式显示，也可以实现 `requestUrlCallBack` 来显示自己的请求规则**
 
 ```
 /**
@@ -250,6 +279,7 @@ changeLog | 变更记录 | 否
  * 
  * @post
  * @get
+ * @rank
  * 
  * @table 我是表格标题
  * 表头 | 表头 
