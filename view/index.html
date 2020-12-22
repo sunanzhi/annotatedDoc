@@ -243,6 +243,8 @@
                     if (/:$/.test(match)) {
                         cls = 'key';
                     } else {
+                        // 去掉转义字符
+                        match = match.replace(/[\\\b\f\n\r\t]/g, '');
                         cls = 'string';
                     }
                 } else if (/true|false/.test(match)) {
