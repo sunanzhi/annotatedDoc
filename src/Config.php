@@ -83,9 +83,9 @@ class Config
      * @var array
      */
     public $staticUrl = [
-        'jqueryPath' => 'http://general.sunanzhi.com/jquery/jquery-3.4.1.min.js',
-        'layuiJsPath' => 'http://general.sunanzhi.com/layui/layui-v2.5.6/layui.js',
-        'layuiCSSPath' => 'http://general.sunanzhi.com/layui/layui-v2.5.6/css/layui.css'
+        'jqueryPath' => '//static.sunanzhi.com/jquery/jquery-3.4.1.min.js',
+        'layuiJsPath' => '//static.sunanzhi.com/layui/layui-v2.5.6/layui.js',
+        'layuiCSSPath' => '//static.sunanzhi.com/layui/layui-v2.5.6/css/layui.css'
     ];
 
     /**
