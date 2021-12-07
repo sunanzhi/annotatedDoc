@@ -136,7 +136,6 @@
                     shade: [0.1, '#fff'] //0.1透明度的白色背景
                 });
                 var fields = $(data.form).serializeArray();
-                console.log(fields)
                 var length = fields.length;
                 var requestUrl;
                 var requestBody;
@@ -173,30 +172,35 @@
                         dataType: "json",
                         success: function (res) {
                             console.log(res)
-                            layer.open({
-                                type: 1,
-                                title: '返回数据',
-                                skin: 'layui-layer-demo', //样式类名
-                                closeBtn: 0, //不显示关闭按钮
-                                anim: 2,
-                                area: ['60%', '90%'],
-                                shadeClose: true, //开启遮罩关闭
-                                content: '<pre>' + syntaxHighlight(JSON.stringify(res)) + '</pre>'
-                            });
-                            layer.close(loadingLayer);
+                            if(res) {
+                                layer.open({
+                                    type: 1,
+                                    title: '返回数据',
+                                    skin: 'layui-layer-demo', //样式类名
+                                    closeBtn: 0, //不显示关闭按钮
+                                    anim: 2,
+                                    area: ['60%', '90%'],
+                                    shadeClose: true, //开启遮罩关闭
+                                    content: '<pre>' + syntaxHighlight(JSON.stringify(res)) + '</pre>'
+                                });
+                            } else {
+                                layer.msg("空内容")
+                            }
                         },
                         error: function(res) {
-                            layer.close(loadingLayer);
                             layer.alert(res.responseText, {
                                 title: '提示',
                                 skin: 'layui-layer-molv' //样式类名
                                 ,closeBtn: 0
                             })
+                        },
+                        complete: function() {
+                            layer.close(loadingLayer);
                         }
                     });
                 } catch (error) {
+                    console.log("error:", error)
                     layer.close(loadingLayer);
-                    console.log(JSON.stringify(error))
                     layer.open({
                         type: 1,
                         title: '请求错误',
